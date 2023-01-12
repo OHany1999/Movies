@@ -103,7 +103,7 @@ class HomeScreen extends StatelessWidget {
                                     print('bookmark');
                                   },
                                   child: Container(
-                                    alignment: Alignment(-0.90,-0.65),
+                                      alignment: Alignment(-0.90, -0.65),
                                       child: Image.asset(
                                           'assets/images/bookmark.png')),
                                 ),
@@ -130,11 +130,8 @@ class HomeScreen extends StatelessWidget {
                   scrollDirection: Axis.horizontal,
                 ),
               ),
-              SizedBox(
-                height: 12,
-              ),
-              FutureBuilder<NewReleases>(
-                future: ApiManager.getNewReleases(),
+              FutureBuilder<Recommended>(
+                future: ApiManager.getRecommended(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(child: CircularProgressIndicator());
@@ -146,28 +143,63 @@ class HomeScreen extends StatelessWidget {
                           Text('Something went wrong'),
                           TextButton(
                             onPressed: () {},
-                            child: Image.asset('assets/images/movie.jpg'),
+                            child: Text('Try Again'),
                           ),
                         ],
                       ),
                     );
                   }
                   return Expanded(
-                    child: ListView.builder(
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemCount: 1,
-                        itemBuilder: (context, index) {
-                          if (snapshot.data!.posterPath == null) {
-                            return Image(
-                                image: NetworkImage(
-                                    "${BASE_IMAGE_URL + BASE_SIZE_IMAGE + snapshot.data!.posterPath!}"));
-                          } else {
-                            return Image.asset('assets/images/movie.jpg');
-                          }
-                          //Text(snapshot.data!.title!,style: TextStyle(color: Colors.white),);
-                          //
-                        }),
+                    child: Container(
+                      margin: EdgeInsets.symmetric(vertical: 20),
+                      color: Color.fromRGBO(81, 79, 79, 1.0),
+                      child: Column(
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(bottom: 10),
+                            alignment:Alignment(-0.90,0.7),
+                            height: 30,
+                            child: Text(
+                              'New Releases ',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: ListView.separated(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: snapshot.data!.results!.length,
+                                separatorBuilder: (context, index) => SizedBox(
+                              width: 2.0,
+                            ),
+                                itemBuilder: (context, index) {
+                                  return Container(
+                                    margin: EdgeInsets.only(left: 10),
+                                    child: Stack(
+                                      children: [
+                                        ClipRRect(
+                                          borderRadius: BorderRadius.circular(10.0),
+                                          child: Image(
+                                            image: NetworkImage(
+                                                "${BASE_IMAGE_URL + BASE_SIZE_IMAGE + snapshot.data!.results![index].posterPath!}"),
+                                            height: 145,
+                                          ),
+                                        ),
+                                        Image.asset(
+                                          'assets/images/bookmark.png',
+
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }),
+                          ),
+                        ],
+                      ),
+                    ),
                   );
                 },
               ),
@@ -191,16 +223,51 @@ class HomeScreen extends StatelessWidget {
                     );
                   }
                   return Expanded(
-                    child: ListView.builder(
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemCount: snapshot.data!.results!.length,
-                        itemBuilder: (context, index) {
-                          return Image(
-                            image: NetworkImage(
-                                "${BASE_IMAGE_URL + BASE_SIZE_IMAGE + snapshot.data!.results![index].posterPath!}"),
-                          );
-                        }),
+                    child: Container(
+                      margin: EdgeInsets.only(bottom: 20),
+                      color: Color.fromRGBO(81, 79, 79, 1.0),
+                      child: Column(
+                        children: [
+                          Text(
+                            'Recommended',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15),
+                          ),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                          Expanded(
+                            child: ListView.separated(
+                                shrinkWrap: true,
+                                scrollDirection: Axis.horizontal,
+                                itemCount: snapshot.data!.results!.length,
+                                separatorBuilder: (context, index) => SizedBox(
+                                      width: 8.0,
+                                    ),
+                                itemBuilder: (context, index) {
+                                  return Stack(
+                                    children: [
+                                      Container(
+                                        // color:Colors.red,
+                                        child: Image(
+                                          image: NetworkImage(
+                                              "${BASE_IMAGE_URL + BASE_SIZE_IMAGE + snapshot.data!.results![index].posterPath!}"),
+                                          width: 100,
+                                          height: 170,
+                                        ),
+                                      ),
+                                      Image.asset(
+                                        'assets/images/bookmark.png',
+                                      ),
+                                    ],
+                                  );
+                                }),
+                          ),
+                        ],
+                      ),
+                    ),
                   );
                 },
               ),
