@@ -1,12 +1,12 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:movie/models/Recommended.dart';
-import 'package:movie/models/home_screen_models/populer_model.dart';
-import 'package:movie/models/home_screen_models/recommended_model.dart';
+import 'package:movie/models/home/Recommended.dart';
+import 'package:movie/models/home/home_screen_models/populer_model.dart';
+import 'package:movie/models/home/home_screen_models/recommended_model.dart';
 import 'package:movie/screens/home_screen/details_screens/popular_details_screen.dart';
 import 'package:movie/screens/home_screen/details_screens/recommended_details_screen.dart';
 import 'package:movie/shared/constants/constants.dart';
-import '../../models/Popular.dart';
+import '../../models/home/Popular.dart';
 import '../../shared/api/api_manager.dart';
 
 class HomeScreen extends StatelessWidget {

@@ -2,12 +2,12 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
-import 'package:movie/models/MoreLikeThis.dart';
-import 'package:movie/models/NewReleases.dart';
-import 'package:movie/models/Recommended.dart';
-
-import '../../models/MovieDetails.dart';
-import '../../models/Popular.dart';
+import 'package:movie/models/home/MoreLikeThis.dart';
+import 'package:movie/models/home/NewReleases.dart';
+import 'package:movie/models/home/Recommended.dart';
+import '../../models/home/MovieDetails.dart';
+import '../../models/home/Popular.dart';
+import '../../models/search/Search.dart';
 import '../constants/constants.dart';
 
 
@@ -89,6 +89,18 @@ class ApiManager{
     var json = jsonDecode(sources.body);
     MoreLikeThis moreLikeThis = MoreLikeThis.fromJson(json);
     return moreLikeThis;
+
+  }
+
+  static Future<Search> getSearch(String Query)async{
+    Uri uri = Uri.https(BASE,'/3/search/movie',{
+      'api_key':APIKEY,
+      'query': Query,
+    });
+    Response sources = await http.get(uri);
+    var json = jsonDecode(sources.body);
+    Search search = Search.fromJson(json);
+    return search;
 
   }
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:movie/models/MoreLikeThis.dart';
-import 'package:movie/models/MovieDetails.dart';
-import 'package:movie/models/home_screen_models/populer_model.dart';
+import 'package:movie/models/home/MoreLikeThis.dart';
+import 'package:movie/models/home/MovieDetails.dart';
+import 'package:movie/models/home/home_screen_models/populer_model.dart';
 import 'package:movie/shared/api/api_manager.dart';
 
 import '../../../shared/constants/constants.dart';
