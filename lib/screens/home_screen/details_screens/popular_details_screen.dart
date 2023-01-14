@@ -111,44 +111,67 @@ class PopulerDetailsScreen extends StatelessWidget {
                           ),
                         ],
                       ),
-                      Column(
-                        children: [
-                          Container(
-                            margin: EdgeInsets.only(left: 5),
-                            height: 200,
-                            width: 200,
-                            child: GridView.builder(
-                                gridDelegate:
-                                    SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 3,
-                                  crossAxisSpacing: 10,
-                                  mainAxisSpacing: 5,
-                                  childAspectRatio: 2 / 1,
-                                ),
-                                itemCount: snapshot.data!.genres!.length,
-                                itemBuilder: (context, index) {
-                                  return Container(
-                                    alignment: Alignment.center,
-                                    decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: Color.fromRGBO(
-                                              181, 180, 180, 1.0),
+                      Expanded(
+                        child: Column(
+                          children: [
+                            Container(
+                              margin: EdgeInsets.only(bottom: 15,left: 8,right: 8),
+                              child: GridView.builder(
+                                shrinkWrap: true,
+                                  gridDelegate:
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 3,
+                                    crossAxisSpacing: 10,
+                                    mainAxisSpacing: 5,
+                                    childAspectRatio: 2.6 / 1,
+                                  ),
+                                  itemCount: snapshot.data!.genres!.length,
+                                  itemBuilder: (context, index) {
+                                    return Container(
+                                      alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: Color.fromRGBO(
+                                                181, 180, 180, 1.0),
+                                          ),
+                                          borderRadius: BorderRadius.circular(5)),
+                                      child: Text(
+                                        "${snapshot.data!.genres?[index].name ?? "movie"}",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color:
+                                              Color.fromRGBO(181, 180, 180, 1.0),
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 10,
                                         ),
-                                        borderRadius:
-                                            BorderRadius.circular(8)),
-                                    child: Text(
-                                      "${snapshot.data!.genres?[index].name ?? "movie"}",
-                                      style: TextStyle(
-                                        color:
-                                            Color.fromRGBO(181, 180, 180, 1.0),
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 10,
                                       ),
-                                    ),
-                                  );
-                                }),
-                          )
-                        ],
+                                    );
+                                  }),
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(bottom: 20),
+                              child: Text(
+                                '${snapshot.data!.overview}',
+                                style: TextStyle(color: Colors.white,fontSize: 13),
+                                softWrap: false,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 4,
+                              ),
+                            ),
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.star,
+                                  color: Color.fromRGBO(255, 187, 59, 1.0),
+                                ),
+                                Text(
+                                  '${arg.results.voteAverage ?? 'rate'}',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   );
