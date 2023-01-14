@@ -5,6 +5,7 @@ import 'package:http/http.dart';
 import 'package:movie/models/NewReleases.dart';
 import 'package:movie/models/Recommended.dart';
 
+import '../../models/MovieDetails.dart';
 import '../../models/Popular.dart';
 import '../constants/constants.dart';
 
@@ -65,6 +66,17 @@ class ApiManager{
       print("error is: ${error}");
       throw error;
     }
+
+  }
+
+  static Future<MovieDetails> getMovieDetails(String movieId)async{
+    Uri uri = Uri.https(BASE, '3/movie/$movieId',{
+      'api_key':APIKEY,
+    });
+    Response sources = await http.get(uri);
+    var json = jsonDecode(sources.body);
+    MovieDetails movieDetails = MovieDetails.fromJson(json);
+    return movieDetails;
 
   }
 
