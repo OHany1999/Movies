@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie/screens/home_screen/details_screens/recommended_details_screen.dart';
 import 'package:movie/screens/home_screen/home_screen.dart';
 import 'package:movie/screens/home_screen/details_screens/popular_details_screen.dart';
 
@@ -18,7 +19,8 @@ class MyApp extends StatelessWidget {
       routes: {
         HomeLayout.routeName: (context) => HomeLayout(),
         HomeScreen.routeName:(context)=>HomeScreen(),
-        PopulerDetailsScreen.routeName:(context)=>PopulerDetailsScreen()
+        PopulerDetailsScreen.routeName:(context)=>PopulerDetailsScreen(),
+        RecommendedDetailsScreen.routeName:(context)=>RecommendedDetailsScreen(),
       },
     );
   }

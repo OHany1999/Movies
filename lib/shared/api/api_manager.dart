@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
+import 'package:movie/models/MoreLikeThis.dart';
 import 'package:movie/models/NewReleases.dart';
 import 'package:movie/models/Recommended.dart';
 
@@ -77,6 +78,17 @@ class ApiManager{
     var json = jsonDecode(sources.body);
     MovieDetails movieDetails = MovieDetails.fromJson(json);
     return movieDetails;
+
+  }
+
+  static Future<MoreLikeThis> getMoreLikeThis(String movieId)async{
+    Uri uri = Uri.https(BASE, '/3/movie/$movieId/similar',{
+      'api_key':APIKEY,
+    });
+    Response sources = await http.get(uri);
+    var json = jsonDecode(sources.body);
+    MoreLikeThis moreLikeThis = MoreLikeThis.fromJson(json);
+    return moreLikeThis;
 
   }
 

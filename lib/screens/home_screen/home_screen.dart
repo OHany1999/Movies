@@ -2,7 +2,9 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:movie/models/Recommended.dart';
 import 'package:movie/models/home_screen_models/populer_model.dart';
+import 'package:movie/models/home_screen_models/recommended_model.dart';
 import 'package:movie/screens/home_screen/details_screens/popular_details_screen.dart';
+import 'package:movie/screens/home_screen/details_screens/recommended_details_screen.dart';
 import 'package:movie/shared/constants/constants.dart';
 import '../../models/Popular.dart';
 import '../../shared/api/api_manager.dart';
@@ -248,13 +250,17 @@ class HomeScreen extends StatelessWidget {
                   margin: EdgeInsets.only(bottom: 20),
                   color: Color.fromRGBO(40, 42, 40, 1.0),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        'Recommended',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15),
+                      Container(
+                        margin: EdgeInsets.only(left: 10,top: 10),
+                        child: Text(
+                          'Recommended',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15),
+                        ),
                       ),
                       SizedBox(
                         height: 10.0,
@@ -270,65 +276,70 @@ class HomeScreen extends StatelessWidget {
                                   width: 2.0,
                                 ),
                             itemBuilder: (context, index) {
-                              return Container(
-                                // border width
-                                width: 110,
-                                margin: EdgeInsets.only(left: 10.0,bottom: 14),
-                                decoration: BoxDecoration(
-                                  border: Border.all(
+                              return InkWell(
+                                onTap: (){
+                                  Navigator.pushNamed(context, RecommendedDetailsScreen.routeName,arguments:RecommendedModel(snapshot.data!.results![index]) );
+                                },
+                                child: Container(
+                                  // border width
+                                  width: 110,
+                                  margin: EdgeInsets.only(left: 10.0,bottom: 14),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Color.fromRGBO(52, 53, 52, 1.0),
+                                    ),
+                                    borderRadius:
+                                    BorderRadius.all(Radius.circular(5)),
                                     color: Color.fromRGBO(52, 53, 52, 1.0),
                                   ),
-                                  borderRadius:
-                                  BorderRadius.all(Radius.circular(5)),
-                                  color: Color.fromRGBO(52, 53, 52, 1.0),
-                                ),
-                                child: Column(
-                                  children: [
-                                    Stack(
-                                      children: [
-                                        ClipRRect(
-                                          borderRadius:
-                                          BorderRadius.circular(10.0),
-                                          child: Image(
-                                            image: NetworkImage(
-                                                "${BASE_IMAGE_URL + BASE_SIZE_IMAGE +
-                                                    snapshot.data!.results![index]
-                                                        .posterPath!}"),
-                                            height: 135,
+                                  child: Column(
+                                    children: [
+                                      Stack(
+                                        children: [
+                                          ClipRRect(
+                                            borderRadius:
+                                            BorderRadius.circular(10.0),
+                                            child: Image(
+                                              image: NetworkImage(
+                                                  "${BASE_IMAGE_URL + BASE_SIZE_IMAGE +
+                                                      snapshot.data!.results![index]
+                                                          .posterPath!}"),
+                                              height: 135,
+                                            ),
                                           ),
-                                        ),
-                                        Image.asset(
-                                          'assets/images/bookmark.png',
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Icon(
-                                          Icons.star,
-                                          color: Color.fromRGBO(
-                                              255, 187, 59, 1.0),
-                                        ),
-                                        Text(
-                                          '${snapshot.data?.results?[index]
-                                              .voteAverage ?? 'rate'}',
-                                          style: TextStyle(
-                                              color: Colors.white),
-                                        ),
-                                      ],
-                                    ),
-                                    Text(
-                                      '${snapshot.data!.results?[index].title ??
-                                          'nothing'}',
-                                      style: TextStyle(color: Colors.white),
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    Text(
-                                      '${snapshot.data!.results?[index].releaseDate ??
-                                          'still'}',
-                                      style: TextStyle(color: Colors.white),
-                                    )
-                                  ],
+                                          Image.asset(
+                                            'assets/images/bookmark.png',
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Icon(
+                                            Icons.star,
+                                            color: Color.fromRGBO(
+                                                255, 187, 59, 1.0),
+                                          ),
+                                          Text(
+                                            '${snapshot.data?.results?[index]
+                                                .voteAverage ?? 'rate'}',
+                                            style: TextStyle(
+                                                color: Colors.white),
+                                          ),
+                                        ],
+                                      ),
+                                      Text(
+                                        '${snapshot.data!.results?[index].title ??
+                                            'nothing'}',
+                                        style: TextStyle(color: Colors.white),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      Text(
+                                        '${snapshot.data!.results?[index].releaseDate ??
+                                            'still'}',
+                                        style: TextStyle(color: Colors.white),
+                                      )
+                                    ],
+                                  ),
                                 ),
                               );
                             }),

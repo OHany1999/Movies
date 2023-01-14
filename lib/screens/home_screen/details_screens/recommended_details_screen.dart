@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:movie/models/MoreLikeThis.dart';
 import 'package:movie/models/MovieDetails.dart';
-import 'package:movie/models/home_screen_models/populer_model.dart';
+import 'package:movie/models/home_screen_models/recommended_model.dart';
 import 'package:movie/shared/api/api_manager.dart';
 
 import '../../../shared/constants/constants.dart';
 
-class PopulerDetailsScreen extends StatelessWidget {
-  static const String routeName = 'next';
+class RecommendedDetailsScreen extends StatelessWidget {
+  static const String routeName = 'recommend';
 
   @override
   Widget build(BuildContext context) {
-    var arg = ModalRoute.of(context)?.settings.arguments as PopularModel;
+    var arg = ModalRoute.of(context)?.settings.arguments as RecommendedModel;
     return Scaffold(
       backgroundColor: Color.fromRGBO(18, 19, 18, 1.0),
       appBar: AppBar(
@@ -121,9 +121,9 @@ class PopulerDetailsScreen extends StatelessWidget {
                               //and add container height and width insted
                               margin: EdgeInsets.only(bottom: 15,left: 8,right: 8),
                               child: GridView.builder(
-                                shrinkWrap: true,
+                                  shrinkWrap: true,
                                   gridDelegate:
-                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                  SliverGridDelegateWithFixedCrossAxisCount(
                                     crossAxisCount: 3,
                                     crossAxisSpacing: 10,
                                     mainAxisSpacing: 5,
@@ -144,7 +144,7 @@ class PopulerDetailsScreen extends StatelessWidget {
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                           color:
-                                              Color.fromRGBO(181, 180, 180, 1.0),
+                                          Color.fromRGBO(181, 180, 180, 1.0),
                                           fontWeight: FontWeight.bold,
                                           fontSize: 10,
                                         ),
@@ -182,7 +182,7 @@ class PopulerDetailsScreen extends StatelessWidget {
                 }),
             SizedBox(height: 10.0,),
             FutureBuilder<MoreLikeThis>(
-              future: ApiManager.getMoreLikeThis(arg.results.id.toString()),
+                future: ApiManager.getMoreLikeThis(arg.results.id.toString()),
                 builder: (context,snapshot){
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(child: CircularProgressIndicator());
