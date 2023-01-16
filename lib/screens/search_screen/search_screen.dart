@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movie/models/search/Search.dart';
+import 'package:movie/models/search/search_details_model.dart';
+import 'package:movie/screens/details_screens/search_details_screen.dart';
 import 'package:movie/shared/api/api_manager.dart';
 import 'package:movie/shared/constants/constants.dart';
 
@@ -59,7 +61,10 @@ class _SearchScreenState extends State<SearchScreen> {
                   future: ApiManager.getSearch(data),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
+                      return Container(
+                        margin: EdgeInsets.only(top: 300),
+                          child: CircularProgressIndicator(),
+                      );
                     }
                     if (snapshot.hasError) {
                       return Center(
@@ -89,58 +94,85 @@ class _SearchScreenState extends State<SearchScreen> {
                       shrinkWrap: true,
                       physics: BouncingScrollPhysics(),
                       itemBuilder: (context, index) {
-                        return Container(
-                          margin: EdgeInsets.only(left: 20),
-                          child: Row(
-                            children: [
-                              if(snapshot.data?.results?[index].backdropPath != null)
-                              Image(
-                                image: NetworkImage(
-                                    '${BASE_IMAGE_URL + BASE_SIZE_IMAGE + snapshot.data!.results![index].backdropPath!}'),
-                                width: 140,
-                                height: 130,
-                              ),
-                              if(snapshot.data?.results?[index].backdropPath == null)
-                                Image(image: AssetImage('assets/images/movie.jpg'),width: 140,
-                                  height: 130,),
-                              Expanded(
-                                child: Container(
-                                  margin: EdgeInsets.only(left: 20),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                        return InkWell(
+                          onTap: (){
+                            Navigator.pushNamed(context, SearchDetailsScreen.routeName,arguments:  SearchModel(snapshot.data!.results![index]),);
+                          },
+                          child: Container(
+                            margin: EdgeInsets.only(left: 20),
+                            child: Row(
+                              children: [
+                                if(snapshot.data?.results?[index].backdropPath != null)
+                                Stack(
+                                  alignment: Alignment.topLeft,
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(30),
+                                      child: Image(
+                                        image: NetworkImage(
+                                            '${BASE_IMAGE_URL + BASE_SIZE_IMAGE + snapshot.data!.results![index].backdropPath!}'),
+                                        width: 140,
+                                        height: 130,
+                                      ),
+                                    ),
+                                    Container(
+                                      margin: EdgeInsets.only(top: 25),
+                                        child: Image.asset('assets/images/bookmark.png')),
+                                  ],
+                                ),
+                                if(snapshot.data?.results?[index].backdropPath == null)
+                                  Stack(
+                                    alignment: Alignment.topLeft,
                                     children: [
-                                      Text(
-                                        '${snapshot.data!.results?[index].title??'No Name'}',
-                                        style: TextStyle(
-                                            color: Colors.white, fontSize: 15),
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(20),
+                                        child: Image(image: AssetImage('assets/images/movie.jpg'),width: 140,
+                                          height: 130,),
                                       ),
-                                      SizedBox(
-                                        height: 6,
-                                      ),
-                                      Text(
-                                        '${snapshot.data!.results?[index].releaseDate??'stil'}',
-                                        style: TextStyle(
-                                            color: Color.fromRGBO(
-                                                181, 180, 180, 1.0),
-                                            fontSize: 13),
-                                      ),
-                                      SizedBox(
-                                        height: 6,
-                                      ),
-                                      Text(
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
-                                        '${snapshot.data!.results?[index].overview??'No Name'}',
-                                        style: TextStyle(
-                                            color: Color.fromRGBO(
-                                                181, 180, 180, 1.0),
-                                            fontSize: 13),
-                                      ),
+                                      Container(
+                                          margin: EdgeInsets.only(top: 18),
+                                          child: Image.asset('assets/images/bookmark.png')),
                                     ],
                                   ),
+                                Expanded(
+                                  child: Container(
+                                    margin: EdgeInsets.only(left: 20),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          '${snapshot.data!.results?[index].title??'No Name'}',
+                                          style: TextStyle(
+                                              color: Colors.white, fontSize: 15),
+                                        ),
+                                        SizedBox(
+                                          height: 6,
+                                        ),
+                                        Text(
+                                          '${snapshot.data!.results?[index].releaseDate??'stil'}',
+                                          style: TextStyle(
+                                              color: Color.fromRGBO(
+                                                  181, 180, 180, 1.0),
+                                              fontSize: 13),
+                                        ),
+                                        SizedBox(
+                                          height: 6,
+                                        ),
+                                        Text(
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                          '${snapshot.data!.results?[index].overview??'No Name'}',
+                                          style: TextStyle(
+                                              color: Color.fromRGBO(
+                                                  181, 180, 180, 1.0),
+                                              fontSize: 13),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         );
                       },

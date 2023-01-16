@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:movie/models/home/MoreLikeThis.dart';
-import 'package:movie/models/home/MovieDetails.dart';
-import 'package:movie/models/home/home_screen_models/recommended_model.dart';
+import 'package:movie/models/details_screen/MoreLikeThis.dart';
+import 'package:movie/models/details_screen/MovieDetails.dart';
 import 'package:movie/shared/api/api_manager.dart';
-
+import '../../../models/home/home_screen_models_for_navigate/recommended_model.dart';
 import '../../../shared/constants/constants.dart';
 
 class RecommendedDetailsScreen extends StatelessWidget {
@@ -33,10 +32,14 @@ class RecommendedDetailsScreen extends StatelessWidget {
                 Stack(
                   alignment: Alignment.center,
                   children: [
+                    if(arg.results.backdropPath != null)
                     Image(
                       image: NetworkImage(
                           "${BASE_IMAGE_URL + BASE_SIZE_IMAGE + arg.results.backdropPath!}"),
                     ),
+                    Image.asset('assets/images/PlayBt.png'),
+                    if(arg.results.backdropPath == null)
+                      Image.asset('assets/images/movie.jpg'),
                     Image.asset('assets/images/PlayBt.png'),
                   ],
                 ),
@@ -185,7 +188,7 @@ class RecommendedDetailsScreen extends StatelessWidget {
                 future: ApiManager.getMoreLikeThis(arg.results.id.toString()),
                 builder: (context,snapshot){
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
+                    return Center(child: Container());
                   }
                   if (snapshot.hasError) {
                     return Center(

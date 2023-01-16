@@ -2,10 +2,10 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
-import 'package:movie/models/home/MoreLikeThis.dart';
+import 'package:movie/models/details_screen/MoreLikeThis.dart';
 import 'package:movie/models/home/NewReleases.dart';
 import 'package:movie/models/home/Recommended.dart';
-import '../../models/home/MovieDetails.dart';
+import '../../models/details_screen/MovieDetails.dart';
 import '../../models/home/Popular.dart';
 import '../../models/search/Search.dart';
 import '../constants/constants.dart';
@@ -33,10 +33,9 @@ class ApiManager{
   }
 
   static Future<NewReleases> getNewReleases()async{
-    Uri uri= Uri.https(BASE, '/3/movie/latest',{
+    Uri uri= Uri.https(BASE, '/3/movie/now_playing',{
       'api_key':APIKEY,
-      'language': 'en-US',
-      'page':'1'
+
     });
     Response sources = await http.get(uri);
     try{

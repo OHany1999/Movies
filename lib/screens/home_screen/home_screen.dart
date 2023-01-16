@@ -1,16 +1,29 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:movie/models/friebase_model/watch_list_model.dart';
+import 'package:movie/models/home/NewReleases.dart';
 import 'package:movie/models/home/Recommended.dart';
-import 'package:movie/models/home/home_screen_models/populer_model.dart';
-import 'package:movie/models/home/home_screen_models/recommended_model.dart';
-import 'package:movie/screens/home_screen/details_screens/popular_details_screen.dart';
-import 'package:movie/screens/home_screen/details_screens/recommended_details_screen.dart';
+import 'package:movie/models/home/home_screen_models_for_navigate/new_releases_model.dart';
+import 'package:movie/screens/details_screens/new_releases_details_screen.dart';
+import 'package:movie/screens/details_screens/popular_details_screen.dart';
+import 'package:movie/screens/details_screens/recommended_details_screen.dart';
 import 'package:movie/shared/constants/constants.dart';
+import 'package:movie/shared/firebase/firebase_utils.dart';
 import '../../models/home/Popular.dart';
+import '../../models/home/home_screen_models_for_navigate/populer_model.dart';
+import '../../models/home/home_screen_models_for_navigate/recommended_model.dart';
 import '../../shared/api/api_manager.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   static const String routeName = 'firstHome';
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  bool mark = false;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +40,10 @@ class HomeScreen extends StatelessWidget {
               future: ApiManager.getPopular(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
+                  return Container(
+                    margin: EdgeInsets.only(top: 350),
+                      child: CircularProgressIndicator(),
+                  );
                 }
                 if (snapshot.hasError) {
                   return Center(
@@ -45,8 +61,7 @@ class HomeScreen extends StatelessWidget {
                 return CarouselSlider(
                   items: snapshot.data!.results!
                       .map(
-                        (results) =>
-                        InkWell(
+                        (results) => InkWell(
                           onTap: () {
                             Navigator.pushNamed(
                                 context, PopulerDetailsScreen.routeName,
@@ -55,15 +70,17 @@ class HomeScreen extends StatelessWidget {
                           },
                           child: Stack(
                             children: [
-                              Image(
-                                image: NetworkImage(
-                                    "${BASE_IMAGE_URL + BASE_SIZE_IMAGE +
-                                        results.backdropPath!}"),
-                                fit: BoxFit.cover,
-                                width: double.infinity,
-                                height: 180,
-                                alignment: Alignment(0.5, -0.5),
-                              ),
+                              if (results.backdropPath != null)
+                                Image(
+                                  image: NetworkImage(
+                                      "${BASE_IMAGE_URL + BASE_SIZE_IMAGE + results.backdropPath!}"),
+                                  fit: BoxFit.cover,
+                                  width: double.infinity,
+                                  height: 180,
+                                  alignment: Alignment(0.5, -0.5),
+                                ),
+                              if (results.backdropPath == null)
+                                Image.asset('assets/images/movie.jpg'),
                               Container(
                                 alignment: Alignment.center,
                                 child: Image(
@@ -99,8 +116,8 @@ class HomeScreen extends StatelessWidget {
                                     alignment: Alignment(-0.9, 0.5),
                                     child: InkWell(
                                       onTap: () {
-                                        Navigator.pushNamed(
-                                            context, PopulerDetailsScreen.routeName,
+                                        Navigator.pushNamed(context,
+                                            PopulerDetailsScreen.routeName,
                                             arguments: PopularModel(results));
                                         print('poster');
                                       },
@@ -108,8 +125,7 @@ class HomeScreen extends StatelessWidget {
                                         borderRadius: BorderRadius.circular(10),
                                         child: Image(
                                           image: NetworkImage(
-                                              '${BASE_IMAGE_URL + BASE_SIZE_IMAGE +
-                                                  results.posterPath!}'),
+                                              '${BASE_IMAGE_URL + BASE_SIZE_IMAGE + results.posterPath!}'),
                                           width: 150,
                                           height: 200,
                                         ),
@@ -117,21 +133,21 @@ class HomeScreen extends StatelessWidget {
                                     ),
                                   ),
                                   Container(
-                                      alignment: Alignment(-0.89, -0.65),
-                                      child: InkWell(
-                                        onTap: (){
-                                          print('bookmark');
-                                        },
-                                        child: Image.asset(
-                                            'assets/images/bookmark.png'),
-                                      ),
+                                    alignment: Alignment(-0.89, -0.65),
+                                    child: InkWell(
+                                      onTap: () {
+                                        print('bookmark111');
+                                      },
+                                      child: Image.asset(
+                                          'assets/images/bookmark.png'),
+                                    ),
                                   ),
                                 ],
                               ),
                             ],
                           ),
                         ),
-                  )
+                      )
                       .toList(),
                   options: CarouselOptions(
                     height: 250,
@@ -151,11 +167,11 @@ class HomeScreen extends StatelessWidget {
                 );
               },
             ),
-            FutureBuilder<Recommended>(
-              future: ApiManager.getRecommended(),
+            FutureBuilder<NewReleases>(
+              future: ApiManager.getNewReleases(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
+                  return Center(child: Container());
                 }
                 if (snapshot.hasError) {
                   return Center(
@@ -189,35 +205,38 @@ class HomeScreen extends StatelessWidget {
                         ),
                       ),
                       Container(
-                        height:130,
+                        height: 130,
                         child: ListView.separated(
-                          physics: BouncingScrollPhysics(),
+                            physics: BouncingScrollPhysics(),
                             scrollDirection: Axis.horizontal,
                             itemCount: snapshot.data!.results!.length,
-                            separatorBuilder: (context, index) =>
-                                SizedBox(
+                            separatorBuilder: (context, index) => SizedBox(
                                   width: 2.0,
                                 ),
                             itemBuilder: (context, index) {
-                              return Container(
-                                margin: EdgeInsets.only(left: 10),
-                                child: Stack(
-                                  children: [
-                                    ClipRRect(
-                                      borderRadius:
-                                      BorderRadius.circular(10.0),
-                                      child: Image(
-                                        image: NetworkImage(
-                                            "${BASE_IMAGE_URL + BASE_SIZE_IMAGE +
-                                                snapshot.data!.results![index]
-                                                    .posterPath!}"),
-                                        height: 120,
+                              return InkWell(
+                                onTap: (){
+                                  Navigator.pushNamed(context,
+                                    NewReleasesDetailsScreen.routeName,
+                                    arguments: NewReleasesModel(snapshot.data!.results![index]),);
+                                },
+                                child: Container(
+                                  margin: EdgeInsets.only(left: 10),
+                                  child: Stack(
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(10.0),
+                                        child: Image(
+                                          image: NetworkImage(
+                                              "${BASE_IMAGE_URL + BASE_SIZE_IMAGE + snapshot.data!.results![index].posterPath!}"),
+                                          height: 120,
+                                        ),
                                       ),
-                                    ),
-                                    Image.asset(
-                                      'assets/images/bookmark.png',
-                                    ),
-                                  ],
+                                      Image.asset(
+                                        'assets/images/bookmark.png',
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               );
                             }),
@@ -231,7 +250,7 @@ class HomeScreen extends StatelessWidget {
               future: ApiManager.getRecommended(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
+                  return Center( child: Container());
                 }
                 if (snapshot.hasError) {
                   return Center(
@@ -253,7 +272,7 @@ class HomeScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                        margin: EdgeInsets.only(left: 10,top: 10),
+                        margin: EdgeInsets.only(left: 10, top: 10),
                         child: Text(
                           'Recommended',
                           style: TextStyle(
@@ -271,25 +290,28 @@ class HomeScreen extends StatelessWidget {
                         child: ListView.separated(
                             scrollDirection: Axis.horizontal,
                             itemCount: snapshot.data!.results!.length,
-                            separatorBuilder: (context, index) =>
-                                SizedBox(
+                            separatorBuilder: (context, index) => SizedBox(
                                   width: 2.0,
                                 ),
                             itemBuilder: (context, index) {
                               return InkWell(
-                                onTap: (){
-                                  Navigator.pushNamed(context, RecommendedDetailsScreen.routeName,arguments:RecommendedModel(snapshot.data!.results![index]) );
+                                onTap: () {
+                                  Navigator.pushNamed(context,
+                                      RecommendedDetailsScreen.routeName,
+                                      arguments: RecommendedModel(
+                                          snapshot.data!.results![index]));
                                 },
                                 child: Container(
                                   // border width
                                   width: 110,
-                                  margin: EdgeInsets.only(left: 10.0,bottom: 14),
+                                  margin:
+                                      EdgeInsets.only(left: 10.0, bottom: 14),
                                   decoration: BoxDecoration(
                                     border: Border.all(
                                       color: Color.fromRGBO(52, 53, 52, 1.0),
                                     ),
                                     borderRadius:
-                                    BorderRadius.all(Radius.circular(5)),
+                                        BorderRadius.all(Radius.circular(5)),
                                     color: Color.fromRGBO(52, 53, 52, 1.0),
                                   ),
                                   child: Column(
@@ -298,17 +320,66 @@ class HomeScreen extends StatelessWidget {
                                         children: [
                                           ClipRRect(
                                             borderRadius:
-                                            BorderRadius.circular(10.0),
+                                                BorderRadius.circular(10.0),
                                             child: Image(
                                               image: NetworkImage(
-                                                  "${BASE_IMAGE_URL + BASE_SIZE_IMAGE +
-                                                      snapshot.data!.results![index]
-                                                          .posterPath!}"),
+                                                  "${BASE_IMAGE_URL + BASE_SIZE_IMAGE + snapshot.data!.results![index].posterPath!}"),
                                               height: 135,
                                             ),
                                           ),
-                                          Image.asset(
-                                            'assets/images/bookmark.png',
+                                          InkWell(
+                                            onTap: () {
+                                              // print(firebaseList.length);
+                                              // WatchListModel watchlist =
+                                              //     WatchListModel(
+                                              //   movieId: snapshot.data!
+                                              //       .results![index].id
+                                              //       .toString(),
+                                              //   imageUrl: snapshot
+                                              //       .data!
+                                              //       .results![index]
+                                              //       .backdropPath!,
+                                              //   date: snapshot
+                                              //       .data!
+                                              //       .results![index]
+                                              //       .releaseDate!,
+                                              //   title: snapshot.data!
+                                              //       .results![index].title!,
+                                              //   description: snapshot
+                                              //       .data!
+                                              //       .results![index]
+                                              //       .overview!,
+                                              //   isMarked: true,
+                                              // );
+                                              // if (firebaseList.isEmpty) {
+                                              //   addWatchListToFireStore(watchlist);
+                                              //   print('if1');
+                                              // } else {
+                                              //   for (int i = 1; i <= firebaseList.length; i++) {
+                                              //     if (firebaseList[i].id == snapshot.data!.results![index].id) {
+                                              //       deleteWatchListFromFireStore(snapshot.data!.results![index].id.toString());
+                                              //       print('if2');
+                                              //     } else {
+                                              //       addWatchListToFireStore(
+                                              //           watchlist);
+                                              //       print('else');
+                                              //     }
+                                              //   }
+                                              // }
+                                              // setState(() {
+                                              //
+                                              // });
+                                            },
+                                            child:
+                                                // firebaseList[index].isMarked ==false
+                                                //     ?
+                                                Image.asset(
+                                              'assets/images/bookmark.png',
+                                            ),
+                                            // : Icon(
+                                            //     Icons.ac_unit,
+                                            //     color: Colors.amber,
+                                            //   ),
                                           ),
                                         ],
                                       ),
@@ -320,22 +391,19 @@ class HomeScreen extends StatelessWidget {
                                                 255, 187, 59, 1.0),
                                           ),
                                           Text(
-                                            '${snapshot.data?.results?[index]
-                                                .voteAverage ?? 'rate'}',
-                                            style: TextStyle(
-                                                color: Colors.white),
+                                            '${snapshot.data?.results?[index].voteAverage ?? 'rate'}',
+                                            style:
+                                                TextStyle(color: Colors.white),
                                           ),
                                         ],
                                       ),
                                       Text(
-                                        '${snapshot.data!.results?[index].title ??
-                                            'nothing'}',
+                                        '${snapshot.data!.results?[index].title ?? 'nothing'}',
                                         style: TextStyle(color: Colors.white),
                                         overflow: TextOverflow.ellipsis,
                                       ),
                                       Text(
-                                        '${snapshot.data!.results?[index].releaseDate ??
-                                            'still'}',
+                                        '${snapshot.data!.results?[index].releaseDate ?? 'still'}',
                                         style: TextStyle(color: Colors.white),
                                       )
                                     ],
