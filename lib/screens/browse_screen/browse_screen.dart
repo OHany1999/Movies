@@ -8,23 +8,23 @@ class BrowseScreen extends StatelessWidget {
   static const String routeName = 'browse';
   List<String> imageList = [
     'assets/images/Action.jpg',
-    'assets/images/movie.jpg',
-    'assets/images/movie.jpg',
+    'assets/images/adventure.jpg',
+    'assets/images/animation.jpg',
     'assets/images/Comedy.jpeg',
-    'assets/images/Horror.jpg',
-    'assets/images/movie.jpg',
-    'assets/images/movie.jpg',
-    'assets/images/movie.jpg',
+    'assets/images/crime.jpg',
+    'assets/images/documentary.jpg',
+    'assets/images/drama.jpg',
+    'assets/images/family.jpg',
     'assets/images/Fantasy.jpg',
-    'assets/images/movie.jpg',
+    'assets/images/history.jpg',
     'assets/images/Horror.jpg',
-    'assets/images/movie.jpg',
-    'assets/images/movie.jpg',
+    'assets/images/musical.jpg',
+    'assets/images/mystery.jpg',
     'assets/images/Romance.jpg',
     'assets/images/star-wars.jpg',
-    'assets/images/movie.jpg',
+    'assets/images/tv_show.jpg',
     'assets/images/Thriller.jpg',
-    'assets/images/movie.jpg',
+    'assets/images/war.jpg',
     'assets/images/Western.jpg',
     'assets/images/movie.jpg',
     'assets/images/movie.jpg',
@@ -107,21 +107,27 @@ class BrowseScreen extends StatelessWidget {
                           child: Stack(
                             alignment: Alignment.center,
                             children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(5),
-                                child: Image.asset(
-                                  imageList[index],
-                                  fit: BoxFit.fill,
-                                  width: 180,
-                                  height: 100,
+                              ColorFiltered(
+                                colorFilter: ColorFilter.mode(
+                                    Colors.black.withOpacity(0.2),
+                                    BlendMode.dstATop),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(5),
+                                  child: Image.asset(
+                                    imageList[index],
+                                    fit: BoxFit.fill,
+                                    width: 180,
+                                    height: 100,
+                                  ),
                                 ),
                               ),
                               Text(
                                 snapshot.data!.genres![index].name!,
                                 style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20),
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                ),
                               )
                             ],
                           ),

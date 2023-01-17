@@ -182,8 +182,9 @@ class DetailsScreen extends StatelessWidget {
                                   Icons.star,
                                   color: Color.fromRGBO(255, 187, 59, 1.0),
                                 ),
+                                SizedBox(width: 5,),
                                 Text(
-                                  '${arg.voteAverage.substring(0,3)}',
+                                  '${arg.voteAverage.substring(0,1)}',
                                   style: TextStyle(color: Colors.white),
                                 ),
                               ],
@@ -295,14 +296,14 @@ class DetailsScreen extends StatelessWidget {
                                         ),
                                         Row(
                                           children: [
+                                            SizedBox(width: 10,),
                                             Icon(
                                               Icons.star,
                                               color: Color.fromRGBO(
                                                   255, 187, 59, 1.0),
                                             ),
-                                            Text(
-                                              '${snapshot.data?.results?[index]
-                                                  .voteAverage ?? 'rate'}'.substring(0,3),
+                                            SizedBox(width: 5,),
+                                            Text('${snapshot.data?.results?[index].voteAverage ?? 'rate'}'.substring(0,1),
                                               style: TextStyle(
                                                   color: Colors.white),
                                             ),
