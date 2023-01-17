@@ -16,19 +16,22 @@ class CategoryMoviesScreen extends StatelessWidget {
     var args = ModalRoute.of(context)?.settings.arguments as IdModel;
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0.0,
+          centerTitle: true,
+          title: Text(
+            '${args.catName} Movies',
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.bold),
+          ),
+        ),
         backgroundColor: Color.fromRGBO(18, 19, 18, 1.0),
         body: SingleChildScrollView(
           child: Column(
             children: [
-              Container(
-                  margin: EdgeInsets.only(top: 10),
-                  child: Text(
-                    '${args.catName} Movies',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold),
-                  )),
               FutureBuilder<Discover>(
                   future: ApiManager.getDiscover(args.catId),
                   builder: (context, snapshot) {

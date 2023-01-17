@@ -12,7 +12,10 @@ class DetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var arg = ModalRoute.of(context)?.settings.arguments as DetailsModel;
+    var arg = ModalRoute
+        .of(context)
+        ?.settings
+        .arguments as DetailsModel;
     return Scaffold(
       backgroundColor: Color.fromRGBO(18, 19, 18, 1.0),
       appBar: AppBar(
@@ -37,7 +40,8 @@ class DetailsScreen extends StatelessWidget {
                     if(arg.backgroundImage != null)
                       Image(
                         image: NetworkImage(
-                            "${BASE_IMAGE_URL + BASE_SIZE_IMAGE + arg.backgroundImage}"),
+                            "${BASE_IMAGE_URL + BASE_SIZE_IMAGE +
+                                arg.backgroundImage}"),
                       ),
                     Image.asset('assets/images/PlayBt.png'),
                     if(arg.backgroundImage == null)
@@ -101,7 +105,8 @@ class DetailsScreen extends StatelessWidget {
                               borderRadius: BorderRadius.circular(15),
                               child: Image(
                                 image: NetworkImage(
-                                    '${BASE_IMAGE_URL + BASE_SIZE_IMAGE + arg.posterImage}'),
+                                    '${BASE_IMAGE_URL + BASE_SIZE_IMAGE +
+                                        arg.posterImage}'),
                                 width: 150,
                                 height: 180,
                               ),
@@ -124,7 +129,8 @@ class DetailsScreen extends StatelessWidget {
                             Container(
                               // you can remove shrinkWrap
                               //and add container height and width insted
-                              margin: EdgeInsets.only(bottom: 15,left: 8,right: 8),
+                              margin: EdgeInsets.only(
+                                  bottom: 15, left: 8, right: 8),
                               child: GridView.builder(
                                   shrinkWrap: true,
                                   gridDelegate:
@@ -143,9 +149,11 @@ class DetailsScreen extends StatelessWidget {
                                             color: Color.fromRGBO(
                                                 181, 180, 180, 1.0),
                                           ),
-                                          borderRadius: BorderRadius.circular(5)),
+                                          borderRadius: BorderRadius.circular(
+                                              5)),
                                       child: Text(
-                                        "${snapshot.data!.genres?[index].name ?? "movie"}",
+                                        "${snapshot.data!.genres?[index].name ??
+                                            "movie"}",
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                           color:
@@ -161,7 +169,8 @@ class DetailsScreen extends StatelessWidget {
                               margin: EdgeInsets.only(bottom: 20),
                               child: Text(
                                 '${snapshot.data!.overview}',
-                                style: TextStyle(color: Colors.white,fontSize: 13),
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 13),
                                 softWrap: false,
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 4,
@@ -174,7 +183,7 @@ class DetailsScreen extends StatelessWidget {
                                   color: Color.fromRGBO(255, 187, 59, 1.0),
                                 ),
                                 Text(
-                                  '${arg.voteAverage}',
+                                  '${arg.voteAverage.substring(0,3)}',
                                   style: TextStyle(color: Colors.white),
                                 ),
                               ],
@@ -188,7 +197,7 @@ class DetailsScreen extends StatelessWidget {
             SizedBox(height: 10.0,),
             FutureBuilder<MoreLikeThis>(
                 future: ApiManager.getMoreLikeThis(arg.movieId),
-                builder: (context,snapshot){
+                builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(child: Container());
                   }
@@ -211,7 +220,7 @@ class DetailsScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
-                          margin: EdgeInsets.only(left: 10,top: 4),
+                          margin: EdgeInsets.only(left: 10, top: 4),
                           child: Text(
                             'More Like This',
                             style: TextStyle(
@@ -234,65 +243,86 @@ class DetailsScreen extends StatelessWidget {
                                     width: 2.0,
                                   ),
                               itemBuilder: (context, index) {
-                                return Container(
-                                  // border width
-                                  width: 120,
-                                  margin: EdgeInsets.only(left: 10.0,bottom: 14),
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
+                                return InkWell(
+                                  onTap: () {
+                                    Navigator.pushNamed(
+                                      context, DetailsScreen.routeName,
+                                      arguments: DetailsModel(
+                                    snapshot.data!.results![index].title!,
+                                      snapshot.data!.results![index].backdropPath!,
+                                      snapshot.data!.results![index].releaseDate!,
+                                      snapshot.data!.results![index].id.toString(),
+                                      snapshot.data!.results![index].posterPath!,
+                                      snapshot.data!.results![index].voteAverage.toString(),
+                                    )
+                                      ,
+                                    );
+                                  },
+                                  child: Container(
+                                    // border width
+                                    width: 120,
+                                    margin: EdgeInsets.only(
+                                        left: 10.0, bottom: 14),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: Color.fromRGBO(52, 53, 52, 1.0),
+                                      ),
+                                      borderRadius:
+                                      BorderRadius.all(Radius.circular(5)),
                                       color: Color.fromRGBO(52, 53, 52, 1.0),
                                     ),
-                                    borderRadius:
-                                    BorderRadius.all(Radius.circular(5)),
-                                    color: Color.fromRGBO(52, 53, 52, 1.0),
-                                  ),
-                                  child: Column(
-                                    children: [
-                                      Stack(
-                                        children: [
-                                          ClipRRect(
-                                            borderRadius:
-                                            BorderRadius.circular(10.0),
-                                            child: Image(
-                                              image: NetworkImage(
-                                                  "${BASE_IMAGE_URL + BASE_SIZE_IMAGE +
-                                                      snapshot.data!.results![index]
-                                                          .posterPath!}"),
-                                              height: 135,
+                                    child: Column(
+                                      children: [
+                                        Stack(
+                                          children: [
+                                            ClipRRect(
+                                              borderRadius:
+                                              BorderRadius.circular(10.0),
+                                              child: Image(
+                                                image: NetworkImage(
+                                                    "${BASE_IMAGE_URL +
+                                                        BASE_SIZE_IMAGE +
+                                                        snapshot.data!
+                                                            .results![index]
+                                                            .posterPath!}"),
+                                                height: 135,
+                                              ),
                                             ),
-                                          ),
-                                          Image.asset(
-                                            'assets/images/bookmark.png',
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          Icon(
-                                            Icons.star,
-                                            color: Color.fromRGBO(
-                                                255, 187, 59, 1.0),
-                                          ),
-                                          Text(
-                                            '${snapshot.data?.results?[index]
-                                                .voteAverage ?? 'rate'}',
-                                            style: TextStyle(
-                                                color: Colors.white),
-                                          ),
-                                        ],
-                                      ),
-                                      Text(
-                                        '${snapshot.data!.results?[index].title ??
-                                            'nothing'}',
-                                        style: TextStyle(color: Colors.white),
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                      Text(
-                                        '${snapshot.data!.results?[index].releaseDate ??
-                                            'still'}',
-                                        style: TextStyle(color: Colors.white),
-                                      )
-                                    ],
+                                            Image.asset(
+                                              'assets/images/bookmark.png',
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Icon(
+                                              Icons.star,
+                                              color: Color.fromRGBO(
+                                                  255, 187, 59, 1.0),
+                                            ),
+                                            Text(
+                                              '${snapshot.data?.results?[index]
+                                                  .voteAverage ?? 'rate'}'.substring(0,3),
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ],
+                                        ),
+                                        Text(
+                                          '${snapshot.data!.results?[index]
+                                              .title ??
+                                              'nothing'}',
+                                          style: TextStyle(color: Colors.white),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        Text(
+                                          '${snapshot.data!.results?[index]
+                                              .releaseDate ??
+                                              'still'}',
+                                          style: TextStyle(color: Colors.white),
+                                        )
+                                      ],
+                                    ),
                                   ),
                                 );
                               }),
