@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:movie/models/details_screen/MoreLikeThis.dart';
 import 'package:movie/models/details_screen/MovieDetails.dart';
-import 'package:movie/models/search/search_details_model.dart';
+import 'package:movie/models/home/home_screen_models_for_navigate/new_releases_model.dart';
+import 'package:movie/models/main_details_Screen_model.dart';
 import 'package:movie/shared/api/api_manager.dart';
+
 import '../../../shared/constants/constants.dart';
 
-class SearchDetailsScreen extends StatelessWidget {
-  static const String routeName = 'searchDetail';
+class DetailsScreen extends StatelessWidget {
+  static const String routeName = 'DetailsScreen';
 
   @override
   Widget build(BuildContext context) {
-    var arg = ModalRoute.of(context)?.settings.arguments as SearchModel;
+    var arg = ModalRoute.of(context)?.settings.arguments as DetailsModel;
     return Scaffold(
       backgroundColor: Color.fromRGBO(18, 19, 18, 1.0),
       appBar: AppBar(
@@ -18,7 +20,7 @@ class SearchDetailsScreen extends StatelessWidget {
         elevation: 0.0,
         centerTitle: true,
         title: Text(
-          '${arg.results.title}',
+          '${arg.title}',
           style: TextStyle(color: Colors.white),
         ),
       ),
@@ -32,13 +34,13 @@ class SearchDetailsScreen extends StatelessWidget {
                 Stack(
                   alignment: Alignment.center,
                   children: [
-                    if(arg.results.backdropPath != null)
+                    if(arg.backgroundImage != null)
                       Image(
                         image: NetworkImage(
-                            "${BASE_IMAGE_URL + BASE_SIZE_IMAGE + arg.results.backdropPath!}"),
+                            "${BASE_IMAGE_URL + BASE_SIZE_IMAGE + arg.backgroundImage}"),
                       ),
                     Image.asset('assets/images/PlayBt.png'),
-                    if(arg.results.backdropPath == null)
+                    if(arg.backgroundImage == null)
                       Image.asset('assets/images/movie.jpg'),
                     Image.asset('assets/images/PlayBt.png'),
                   ],
@@ -52,14 +54,14 @@ class SearchDetailsScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '${arg.results.title}',
+                        '${arg.title}',
                         style: TextStyle(color: Colors.white, fontSize: 18),
                       ),
                       SizedBox(
                         height: 10.0,
                       ),
                       Text(
-                        "${arg.results.releaseDate}",
+                        "${arg.releaseDate}",
                         style: TextStyle(color: Colors.grey),
                       ),
                     ],
@@ -71,7 +73,7 @@ class SearchDetailsScreen extends StatelessWidget {
               height: 10,
             ),
             FutureBuilder<MovieDetails>(
-                future: ApiManager.getMovieDetails(arg.results.id.toString()),
+                future: ApiManager.getMovieDetails(arg.movieId),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(child: CircularProgressIndicator());
@@ -99,7 +101,7 @@ class SearchDetailsScreen extends StatelessWidget {
                               borderRadius: BorderRadius.circular(15),
                               child: Image(
                                 image: NetworkImage(
-                                    '${BASE_IMAGE_URL + BASE_SIZE_IMAGE + arg.results.posterPath!}'),
+                                    '${BASE_IMAGE_URL + BASE_SIZE_IMAGE + arg.posterImage}'),
                                 width: 150,
                                 height: 180,
                               ),
@@ -172,7 +174,7 @@ class SearchDetailsScreen extends StatelessWidget {
                                   color: Color.fromRGBO(255, 187, 59, 1.0),
                                 ),
                                 Text(
-                                  '${arg.results.voteAverage ?? 'rate'}',
+                                  '${arg.voteAverage}',
                                   style: TextStyle(color: Colors.white),
                                 ),
                               ],
@@ -185,7 +187,7 @@ class SearchDetailsScreen extends StatelessWidget {
                 }),
             SizedBox(height: 10.0,),
             FutureBuilder<MoreLikeThis>(
-                future: ApiManager.getMoreLikeThis(arg.results.id.toString()),
+                future: ApiManager.getMoreLikeThis(arg.movieId),
                 builder: (context,snapshot){
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(child: Container());

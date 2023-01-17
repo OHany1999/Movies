@@ -3,10 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:movie/models/home/home_screen_models_for_navigate/new_releases_model.dart';
 import 'package:movie/models/search/Search.dart';
 import 'package:movie/screens/browse_screen/movie_category_screen.dart';
-import 'package:movie/screens/details_screens/new_releases_details_screen.dart';
-import 'package:movie/screens/details_screens/popular_details_screen.dart';
-import 'package:movie/screens/details_screens/recommended_details_screen.dart';
-import 'package:movie/screens/details_screens/search_details_screen.dart';
+import 'package:movie/screens/details_screens/details_screen.dart';
 import 'package:movie/screens/home_screen/home_screen.dart';
 
 
@@ -31,11 +28,8 @@ class MyApp extends StatelessWidget {
       routes: {
         HomeLayout.routeName: (context) => HomeLayout(),
         HomeScreen.routeName:(context)=>HomeScreen(),
-        PopulerDetailsScreen.routeName:(context)=>PopulerDetailsScreen(),
-        RecommendedDetailsScreen.routeName:(context)=>RecommendedDetailsScreen(),
-        NewReleasesDetailsScreen.routeName:(context)=>NewReleasesDetailsScreen(),
-        SearchDetailsScreen.routeName:(context)=>SearchDetailsScreen(),
         CategoryMoviesScreen.routeName:(context)=>CategoryMoviesScreen(),
+        DetailsScreen.routeName:(context)=>DetailsScreen(),
       },
     );
   }

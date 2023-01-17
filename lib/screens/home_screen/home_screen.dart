@@ -1,19 +1,15 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:movie/models/friebase_model/watch_list_model.dart';
 import 'package:movie/models/home/NewReleases.dart';
 import 'package:movie/models/home/Recommended.dart';
-import 'package:movie/models/home/home_screen_models_for_navigate/new_releases_model.dart';
-import 'package:movie/screens/details_screens/new_releases_details_screen.dart';
-import 'package:movie/screens/details_screens/popular_details_screen.dart';
-import 'package:movie/screens/details_screens/recommended_details_screen.dart';
 import 'package:movie/shared/constants/constants.dart';
 import 'package:movie/shared/firebase/firebase_utils.dart';
 import '../../models/home/Popular.dart';
 import '../../models/home/home_screen_models_for_navigate/populer_model.dart';
-import '../../models/home/home_screen_models_for_navigate/recommended_model.dart';
+import '../../models/main_details_Screen_model.dart';
 import '../../shared/api/api_manager.dart';
+import '../details_screens/details_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String routeName = 'firstHome';
@@ -64,8 +60,17 @@ class _HomeScreenState extends State<HomeScreen> {
                         (results) => InkWell(
                           onTap: () {
                             Navigator.pushNamed(
-                                context, PopulerDetailsScreen.routeName,
-                                arguments: PopularModel(results));
+                                context,
+                                DetailsScreen.routeName,
+                                arguments:DetailsModel(
+                                  results.title!,
+                                  results.backdropPath!,
+                                  results.releaseDate!,
+                                  results.id.toString(),
+                                  results.posterPath!,
+                                  results.voteAverage.toString(),
+                                )
+                            );
                             print('alllll');
                           },
                           child: Stack(
@@ -116,9 +121,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                     alignment: Alignment(-0.9, 0.5),
                                     child: InkWell(
                                       onTap: () {
-                                        Navigator.pushNamed(context,
-                                            PopulerDetailsScreen.routeName,
-                                            arguments: PopularModel(results));
+                                        Navigator.pushNamed(
+                                            context,
+                                            DetailsScreen.routeName,
+                                            arguments:DetailsModel(
+                                              results.title!,
+                                              results.backdropPath!,
+                                              results.releaseDate!,
+                                              results.id.toString(),
+                                              results.posterPath!,
+                                              results.voteAverage.toString(),
+                                            )
+                                        );
                                         print('poster');
                                       },
                                       child: ClipRRect(
@@ -216,9 +230,18 @@ class _HomeScreenState extends State<HomeScreen> {
                             itemBuilder: (context, index) {
                               return InkWell(
                                 onTap: (){
-                                  Navigator.pushNamed(context,
-                                    NewReleasesDetailsScreen.routeName,
-                                    arguments: NewReleasesModel(snapshot.data!.results![index]),);
+                                  Navigator.pushNamed(
+                                      context,
+                                      DetailsScreen.routeName,
+                                      arguments:DetailsModel(
+                                        snapshot.data!.results![index].title!,
+                                        snapshot.data!.results![index].backdropPath!,
+                                        snapshot.data!.results![index].releaseDate!,
+                                        snapshot.data!.results![index].id.toString(),
+                                        snapshot.data!.results![index].posterPath!,
+                                        snapshot.data!.results![index].voteAverage.toString(),
+                                      )
+                                  );
                                 },
                                 child: Container(
                                   margin: EdgeInsets.only(left: 10),
@@ -296,10 +319,18 @@ class _HomeScreenState extends State<HomeScreen> {
                             itemBuilder: (context, index) {
                               return InkWell(
                                 onTap: () {
-                                  Navigator.pushNamed(context,
-                                      RecommendedDetailsScreen.routeName,
-                                      arguments: RecommendedModel(
-                                          snapshot.data!.results![index]));
+                                  Navigator.pushNamed(
+                                      context,
+                                      DetailsScreen.routeName,
+                                      arguments:DetailsModel(
+                                        snapshot.data!.results![index].title!,
+                                        snapshot.data!.results![index].backdropPath!,
+                                        snapshot.data!.results![index].releaseDate!,
+                                        snapshot.data!.results![index].id.toString(),
+                                        snapshot.data!.results![index].posterPath!,
+                                        snapshot.data!.results![index].voteAverage.toString(),
+                                      )
+                                  );
                                 },
                                 child: Container(
                                   // border width

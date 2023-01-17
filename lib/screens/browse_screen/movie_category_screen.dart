@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:movie/models/browse/Discover.dart';
 import 'package:movie/models/browse/browse_screen_model_for_navigator/id_model.dart';
+import 'package:movie/models/main_details_Screen_model.dart';
 import 'package:movie/models/search/Search.dart';
 import 'package:movie/models/search/search_details_model.dart';
-import 'package:movie/screens/details_screens/search_details_screen.dart';
+import 'package:movie/screens/details_screens/details_screen.dart';
 import 'package:movie/shared/api/api_manager.dart';
 import 'package:movie/shared/constants/constants.dart';
 
@@ -20,14 +21,14 @@ class CategoryMoviesScreen extends StatelessWidget {
           child: Column(
             children: [
               Container(
-                margin: EdgeInsets.only(top: 10),
+                  margin: EdgeInsets.only(top: 10),
                   child: Text(
-                '${args.catName} Movies',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold),
-              )),
+                    '${args.catName} Movies',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold),
+                  )),
               FutureBuilder<Discover>(
                   future: ApiManager.getDiscover(args.catId),
                   builder: (context, snapshot) {
@@ -55,7 +56,20 @@ class CategoryMoviesScreen extends StatelessWidget {
                       physics: BouncingScrollPhysics(),
                       itemBuilder: (context, index) {
                         return InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.pushNamed(
+                              context,
+                              DetailsScreen.routeName,
+                              arguments:DetailsModel(
+                                snapshot.data!.results![index].title!,
+                                snapshot.data!.results![index].backdropPath!,
+                                snapshot.data!.results![index].releaseDate!,
+                                snapshot.data!.results![index].id.toString(),
+                                snapshot.data!.results![index].posterPath!,
+                                snapshot.data!.results![index].voteAverage.toString(),
+                              )
+                            );
+                          },
                           child: Container(
                             margin: EdgeInsets.only(left: 20),
                             child: Row(
