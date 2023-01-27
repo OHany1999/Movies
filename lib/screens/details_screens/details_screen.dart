@@ -97,31 +97,33 @@ class DetailsScreen extends StatelessWidget {
                   }
                   return Row(
                     children: [
-                      Stack(
-                        children: [
-                          Container(
-                            alignment: Alignment(-0.9, 0.5),
-                            child: ClipRRect(
+                      Container(
+                        margin: EdgeInsets.symmetric(horizontal: 10),
+                        child: Stack(
+                          alignment: Alignment.topLeft,
+                          children: [
+                            ClipRRect(
                               borderRadius: BorderRadius.circular(15),
                               child: Image(
                                 image: NetworkImage(
                                     '${BASE_IMAGE_URL + BASE_SIZE_IMAGE +
                                         arg.posterImage}'),
-                                width: 150,
+                                width: 130,
                                 height: 180,
+                                fit: BoxFit.fill,
                               ),
                             ),
-                          ),
-                          Container(
-                            alignment: Alignment(-0.89, -0.65),
-                            child: InkWell(
+                            InkWell(
                               onTap: () {
                                 print('bookmark');
                               },
-                              child: Image.asset('assets/images/bookmark.png'),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(5),
+                                  child: Image.asset('assets/images/bookmark.png'),
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                       Expanded(
                         child: Column(
@@ -261,7 +263,7 @@ class DetailsScreen extends StatelessWidget {
                                   },
                                   child: Container(
                                     // border width
-                                    width: 120,
+                                    width: 115,
                                     margin: EdgeInsets.only(
                                         left: 10.0, bottom: 14),
                                     decoration: BoxDecoration(
@@ -286,7 +288,9 @@ class DetailsScreen extends StatelessWidget {
                                                         snapshot.data!
                                                             .results![index]
                                                             .posterPath!}"),
-                                                height: 135,
+                                                width: double.infinity,
+                                                height: 130,
+                                                fit: BoxFit.fill,
                                               ),
                                             ),
                                             Image.asset(
@@ -294,6 +298,7 @@ class DetailsScreen extends StatelessWidget {
                                             ),
                                           ],
                                         ),
+                                        SizedBox(height: 5,),
                                         Row(
                                           children: [
                                             SizedBox(width: 10,),
@@ -309,6 +314,7 @@ class DetailsScreen extends StatelessWidget {
                                             ),
                                           ],
                                         ),
+                                        SizedBox(height: 3,),
                                         Text(
                                           '${snapshot.data!.results?[index]
                                               .title ??
@@ -316,6 +322,7 @@ class DetailsScreen extends StatelessWidget {
                                           style: TextStyle(color: Colors.white),
                                           overflow: TextOverflow.ellipsis,
                                         ),
+                                        SizedBox(height: 3,),
                                         Text(
                                           '${snapshot.data!.results?[index]
                                               .releaseDate ??

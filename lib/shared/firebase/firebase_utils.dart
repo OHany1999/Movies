@@ -13,19 +13,18 @@ CollectionReference<WatchListModel> getTaskCollection() {
 
 Future<void> addWatchListToFireStore(WatchListModel watchListModel) async {
   var collection= getTaskCollection();
-  var docRef = collection.doc();
-  watchListModel.id = docRef.id;
+  var docRef = collection.doc(watchListModel.movieId);
   return docRef.set(watchListModel);
 }
 
 
-Future<void> deleteWatchListFromFireStore(String movieId) async {
+Future<void> deleteWatchListFromFireStore(String docId) async {
   var collection= getTaskCollection();
-  return collection.doc(movieId).delete();
+  return collection.doc(docId).delete();
 }
 
 Stream<QuerySnapshot<WatchListModel>> getDataFromFireStore(){
-  var data = getTaskCollection().get().asStream();
-return data;
+  var data = getTaskCollection().snapshots();
+  return data;
 
 }
