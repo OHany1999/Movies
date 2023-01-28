@@ -21,6 +21,7 @@ class _SearchScreenState extends State<SearchScreen> {
   late String data = '';
   var get_gata_from_fireStore =getDataFromFireStore();
 
+
   @override
   Widget build(BuildContext context) {
     var getSearch =ApiManager.getSearch(data);
@@ -164,6 +165,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                                 date: snapshot.data!.results![index].releaseDate!,
                                                 title: snapshot.data!.results![index].title!,
                                                 description: snapshot.data!.results![index].overview!,
+                                                posterPath: snapshot.data!.results![index].posterPath!,
+                                                voteAverage: snapshot.data!.results![index].voteAverage.toString(),
                                               );
                                               if(firebaseMovieIdList.contains(IdList[index])){
                                                 deleteWatchListFromFireStore(IdList[index]);
@@ -204,6 +207,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                                 date: snapshot.data!.results![index].releaseDate!,
                                                 title: snapshot.data!.results![index].title!,
                                                 description: snapshot.data!.results![index].overview!,
+                                                posterPath: snapshot.data!.results![index].posterPath!,
+                                                voteAverage: snapshot.data!.results![index].voteAverage.toString(),
                                               );
                                               if(firebaseMovieIdList.contains(IdList[index])){
                                                 deleteWatchListFromFireStore(IdList[index]);

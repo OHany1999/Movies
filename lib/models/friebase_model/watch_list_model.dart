@@ -6,6 +6,8 @@ class WatchListModel {
   String date;
   String title;
   String description;
+  String posterPath;
+  String voteAverage;
 
   WatchListModel({
     this.movieId='',
@@ -13,6 +15,8 @@ class WatchListModel {
     required this.date,
     required this.title,
     required this.description,
+    required this.posterPath,
+    required this.voteAverage,
   });
 
   Map<String, dynamic> toJson() {
@@ -22,6 +26,8 @@ class WatchListModel {
       'date': date,
       'title': title,
       'description': description,
+      'posterPath': posterPath,
+      'voteAverage': voteAverage,
     };
   }
 
@@ -32,5 +38,7 @@ class WatchListModel {
           date: json['date'],
           title: json['title'],
           description: json['description'],
+          posterPath: json['posterPath'],
+          voteAverage: json['voteAverage'],
         );
 }

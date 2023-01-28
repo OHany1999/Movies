@@ -179,6 +179,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 date: results.releaseDate!,
                                                 title: results.title!,
                                                 description: results.overview!,
+                                                posterPath: results.posterPath!,
+                                                voteAverage: results.voteAverage.toString(),
                                               );
                                               if(firebaseMovieIdList.contains(results.id.toString())){
                                                 deleteWatchListFromFireStore(results.id.toString());
@@ -312,6 +314,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   date: snapshot.data!.results![index].releaseDate!,
                                                   title: snapshot.data!.results![index].title!,
                                                   description: snapshot.data!.results![index].overview!,
+                                                  posterPath: snapshot.data!.results![index].posterPath!,
+                                                  voteAverage: snapshot.data!.results![index].voteAverage.toString(),
                                                 );
                                                 if(firebaseMovieIdList.contains(IdList[index])){
                                                   deleteWatchListFromFireStore(IdList[index]);
@@ -448,6 +452,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         date: snapshot.data!.results![index].releaseDate!,
                                                         title: snapshot.data!.results![index].title!,
                                                         description: snapshot.data!.results![index].overview!,
+                                                      posterPath: snapshot.data!.results![index].posterPath!,
+                                                      voteAverage: snapshot.data!.results![index].voteAverage.toString(),
                                                     );
                                                     if(firebaseMovieIdList.contains(IdList[index])){
                                                       deleteWatchListFromFireStore(IdList[index]);
