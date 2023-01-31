@@ -20,11 +20,11 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   late String data = '';
   var get_gata_from_fireStore =getDataFromFireStore();
+  var getSearch;
 
 
   @override
   Widget build(BuildContext context) {
-    var getSearch =ApiManager.getSearch(data);
     return SafeArea(
       child: Scaffold(
         backgroundColor: Color.fromRGBO(18, 19, 18, 1.0),
@@ -83,7 +83,9 @@ class _SearchScreenState extends State<SearchScreen> {
                       ),
                       onChanged: (text) {
                         data = text;
-                        setState(() {});
+                        setState(() {
+                          getSearch =ApiManager.getSearch(data);
+                        });
                       },
                     ),
                   ),
@@ -132,10 +134,10 @@ class _SearchScreenState extends State<SearchScreen> {
                                     DetailsScreen.routeName,
                                     arguments:DetailsModel(
                                       snapshot.data!.results![index].title!,
-                                      snapshot.data!.results![index].backdropPath!,
+                                      snapshot.data!.results![index].backdropPath??'assets/images/movie.jpg',
                                       snapshot.data!.results![index].releaseDate!,
                                       snapshot.data!.results![index].id.toString(),
-                                      snapshot.data!.results![index].posterPath!,
+                                      snapshot.data!.results![index].posterPath??'assets/images/movie.jpg',
                                       snapshot.data!.results![index].voteAverage.toString(),
                                     )
                                 );
@@ -203,11 +205,11 @@ class _SearchScreenState extends State<SearchScreen> {
                                             onTap: (){
                                               WatchListModel watchList=WatchListModel(
                                                 movieId: snapshot.data!.results![index].id.toString(),
-                                                imageUrl: snapshot.data!.results![index].backdropPath!,
+                                                imageUrl: snapshot.data!.results![index].backdropPath??'assets/images/movie.jpg',
                                                 date: snapshot.data!.results![index].releaseDate!,
                                                 title: snapshot.data!.results![index].title!,
                                                 description: snapshot.data!.results![index].overview!,
-                                                posterPath: snapshot.data!.results![index].posterPath!,
+                                                posterPath: snapshot.data!.results![index].posterPath??'assets/images/movie.jpg',
                                                 voteAverage: snapshot.data!.results![index].voteAverage.toString(),
                                               );
                                               if(firebaseMovieIdList.contains(IdList[index])){

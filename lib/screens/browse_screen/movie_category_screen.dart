@@ -20,12 +20,12 @@ class CategoryMoviesScreen extends StatefulWidget {
 }
 
 class _CategoryMoviesScreenState extends State<CategoryMoviesScreen> {
+  var get_gata_from_fireStore =getDataFromFireStore();
 
   @override
   Widget build(BuildContext context) {
     var args = ModalRoute.of(context)?.settings.arguments as IdModel;
-    var getDiscover= ApiManager.getDiscover(args.catId);
-    var get_gata_from_fireStore =getDataFromFireStore();
+    var  getDiscover= ApiManager.getDiscover(args.catId);
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -144,7 +144,9 @@ class _CategoryMoviesScreenState extends State<CategoryMoviesScreen> {
                                                 addWatchListToFireStore(watchList);
                                                 print('is not exist and added');
                                               }
-                                              setState(() {});
+                                              setState(() {
+
+                                              });
                                             },
                                             child:
                                             firebaseMovieIdList.contains(IdList[index])?

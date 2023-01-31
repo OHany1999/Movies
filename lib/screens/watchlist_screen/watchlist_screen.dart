@@ -83,7 +83,7 @@ class _WatchListScreenState extends State<WatchListScreen> {
                       margin: EdgeInsets.only(left: 20),
                       child: Row(
                         children: [
-                          if (firebaseList[index].imageUrl !=null)
+                          if (firebaseList[index].imageUrl != "assets/images/movie.jpg")
                             Stack(
                               alignment: Alignment.topLeft,
                               children: [
@@ -116,7 +116,7 @@ class _WatchListScreenState extends State<WatchListScreen> {
                                 ),
                               ],
                             ),
-                          if (firebaseList[index].imageUrl ==null)
+                          if (firebaseList[index].imageUrl == "assets/images/movie.jpg")
                             Stack(
                               alignment: Alignment.topLeft,
                               children: [

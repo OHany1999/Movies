@@ -74,14 +74,14 @@ class _DetailsScreenState extends State<DetailsScreen> {
                     Stack(
                       alignment: Alignment.center,
                       children: [
-                        if(arg.backgroundImage != null)
+                        if(arg.backgroundImage != 'assets/images/movie.jpg')
                           Image(
                             image: NetworkImage(
                                 "${BASE_IMAGE_URL + BASE_SIZE_IMAGE +
                                     arg.backgroundImage}"),
                           ),
                         Image.asset('assets/images/PlayBt.png'),
-                        if(arg.backgroundImage == null)
+                        if(arg.backgroundImage == 'assets/images/movie.jpg')
                           Image.asset('assets/images/movie.jpg'),
                         Image.asset('assets/images/PlayBt.png'),
                       ],
@@ -139,26 +139,33 @@ class _DetailsScreenState extends State<DetailsScreen> {
                             child: Stack(
                               alignment: Alignment.topLeft,
                               children: [
+                                if(arg.posterImage != 'assets/images/movie.jpg')
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(15),
                                   child: Image(
                                     image: NetworkImage(
-                                        '${BASE_IMAGE_URL + BASE_SIZE_IMAGE +
-                                            arg.posterImage}'),
+                                        '${BASE_IMAGE_URL + BASE_SIZE_IMAGE + arg.posterImage}'),
                                     width: 130,
                                     height: 180,
                                     fit: BoxFit.fill,
                                   ),
                                 ),
+                                if(arg.posterImage == 'assets/images/movie.jpg')
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(15),
+                                  child: Image.asset('assets/images/movie.jpg', width: 130,
+                                    height: 180,
+                                    fit: BoxFit.fill,),
+                                ),
                                 InkWell(
                                   onTap: () {
                                     WatchListModel watchList=WatchListModel(
                                       movieId: snapshot.data!.id.toString(),
-                                      imageUrl: snapshot.data!.backdropPath!,
+                                      imageUrl: snapshot.data!.backdropPath??'assets/images/movie.jpg',
                                       date: snapshot.data!.releaseDate!,
                                       title: snapshot.data!.title!,
                                       description: snapshot.data!.overview!,
-                                      posterPath: snapshot.data!.posterPath!,
+                                      posterPath: snapshot.data!.posterPath??'assets/images/movie.jpg',
                                       voteAverage: snapshot.data!.voteAverage.toString(),
                                     );
                                     if(firebaseMovieIdList.contains(snapshot.data!.id.toString())){
