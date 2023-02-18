@@ -20,10 +20,10 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   bool mark = false;
-  var get_gata_from_fireStore =getDataFromFireStore();
-  var getPopular =ApiManager.getPopular();
-  var getNewReleases =ApiManager.getNewReleases();
-  var getRecommended =ApiManager.getRecommended();
+  var get_gata_from_fireStore = getDataFromFireStore();
+  var getPopular = ApiManager.getPopular();
+  var getNewReleases = ApiManager.getNewReleases();
+  var getRecommended = ApiManager.getRecommended();
 
   @override
   Widget build(BuildContext context) {
@@ -51,8 +51,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 );
               }
-              List<WatchListModel> firebaseList = mainSnapshot.data!.docs.map((event) => event.data()).toList();
-              var firebaseMovieIdList = firebaseList.map((docs) => docs.movieId).toList();
+              List<WatchListModel> firebaseList =
+                  mainSnapshot.data!.docs.map((event) => event.data()).toList();
+              var firebaseMovieIdList =
+                  firebaseList.map((docs) => docs.movieId).toList();
               return Column(
                 children: [
                   SizedBox(
@@ -88,11 +90,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                   Navigator.pushNamed(
                                       context, DetailsScreen.routeName,
                                       arguments: DetailsModel(
-                                        results.title!,
-                                        results.backdropPath!,
-                                        results.releaseDate!,
+                                        results.title ?? 'nothing',
+                                        results.backdropPath ??
+                                            'assets/images/movie.jpg',
+                                        results.releaseDate ?? 'No date',
                                         results.id.toString(),
-                                        results.posterPath!,
+                                        results.posterPath ??
+                                            'assets/images/movie.jpg',
                                         results.voteAverage.toString(),
                                       ));
                                   print('alllll');
@@ -118,95 +122,221 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                                     ),
                                     Container(
-                                      alignment: Alignment(0.5, 0.7),
-                                      child: Text(
-                                        results.title!,
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      alignment: Alignment(0.5, 0.9),
-                                      child: Text(
-                                        results.releaseDate ?? 'still',
-                                        style: TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      margin: EdgeInsets.only(top: 70,left: 10),
-                                      child: Stack(
-                                        alignment: Alignment.topLeft,
+                                      margin:
+                                          EdgeInsets.only(left: 220, top: 50),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
                                         children: [
-                                          InkWell(
-                                            onTap: () {
-                                              Navigator.pushNamed(context,
-                                                  DetailsScreen.routeName,
-                                                  arguments: DetailsModel(
-                                                    results.title!,
-                                                    results.backdropPath!,
-                                                    results.releaseDate!,
-                                                    results.id.toString(),
-                                                    results.posterPath!,
-                                                    results.voteAverage
-                                                        .toString(),
-                                                  ));
-                                              print('poster');
-                                            },
-                                            child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              child: Image(
-                                                image: NetworkImage(
-                                                    '${BASE_IMAGE_URL + BASE_SIZE_IMAGE + results.posterPath!}'),
-                                                width: 130,
-                                                height: 180,
-                                                fit: BoxFit.fill,
-                                              ),
+                                          Text(
+                                            results.title!,
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w500,
                                             ),
                                           ),
-                                          InkWell(
-                                            onTap: () {
-                                              WatchListModel watchList=WatchListModel(
-                                                movieId: results.id.toString(),
-                                                imageUrl: results.backdropPath!,
-                                                date: results.releaseDate!,
-                                                title: results.title!,
-                                                description: results.overview!,
-                                                posterPath: results.posterPath!,
-                                                voteAverage: results.voteAverage.toString(),
-                                              );
-                                              if(firebaseMovieIdList.contains(results.id.toString())){
-                                                deleteWatchListFromFireStore(results.id.toString());
-                                                print('is exist ');
-                                              }else{
-                                                addWatchListToFireStore(watchList);
-                                                print('is not exist and added');
-                                              }
-
-                                              setState(() {});
-                                            },
-                                            child:
-                                            firebaseMovieIdList.contains(results.id.toString())?
-                                            Image.asset('assets/images/bookmark2.png',):
-                                            Image.asset('assets/images/bookmark.png',),
+                                          SizedBox(
+                                            height: 2,
+                                          ),
+                                          Text(
+                                            results.releaseDate ?? 'still',
+                                            style: TextStyle(
+                                              color: Colors.grey,
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w500,
+                                            ),
                                           ),
                                         ],
                                       ),
                                     ),
+                                    if (results.posterPath != null)
+                                      Container(
+                                        margin:
+                                            EdgeInsets.only(top: 70, left: 10),
+                                        child: Stack(
+                                          alignment: Alignment.topLeft,
+                                          children: [
+                                            InkWell(
+                                              onTap: () {
+                                                Navigator.pushNamed(context,
+                                                    DetailsScreen.routeName,
+                                                    arguments: DetailsModel(
+                                                      results.title ??
+                                                          'nothing',
+                                                      results.backdropPath ??
+                                                          'assets/images/movie.jpg',
+                                                      results.releaseDate ??
+                                                          'No date',
+                                                      results.id.toString(),
+                                                      results.posterPath ??
+                                                          'assets/images/movie.jpg',
+                                                      results.voteAverage
+                                                          .toString(),
+                                                    ));
+                                                print('poster');
+                                              },
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                child: Image(
+                                                  image: NetworkImage(
+                                                      '${BASE_IMAGE_URL + BASE_SIZE_IMAGE + results.posterPath!}'),
+                                                  width: 130,
+                                                  height: 180,
+                                                  fit: BoxFit.fill,
+                                                ),
+                                              ),
+                                            ),
+                                            InkWell(
+                                              onTap: () {
+                                                WatchListModel watchList =
+                                                    WatchListModel(
+                                                  movieId:
+                                                      results.id.toString(),
+                                                  imageUrl: results
+                                                          .backdropPath ??
+                                                      'assets/images/movie.jpg',
+                                                  date: results.releaseDate ??
+                                                      'No date',
+                                                  title: results.title ??
+                                                      'nothing',
+                                                  description:
+                                                      results.overview ??
+                                                          'nothing',
+                                                  posterPath: results
+                                                          .posterPath ??
+                                                      'assets/images/movie.jpg',
+                                                  voteAverage: results
+                                                      .voteAverage
+                                                      .toString(),
+                                                );
+                                                if (firebaseMovieIdList
+                                                    .contains(results.id
+                                                        .toString())) {
+                                                  deleteWatchListFromFireStore(
+                                                      results.id.toString());
+                                                  print('is exist ');
+                                                } else {
+                                                  addWatchListToFireStore(
+                                                      watchList);
+                                                  print(
+                                                      'is not exist and added');
+                                                }
+
+                                                setState(() {});
+                                              },
+                                              child:
+                                                  firebaseMovieIdList.contains(
+                                                          results.id.toString())
+                                                      ? Image.asset(
+                                                          'assets/images/bookmark2.png',
+                                                        )
+                                                      : Image.asset(
+                                                          'assets/images/bookmark.png',
+                                                        ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    if (results.posterPath == null)
+                                      Container(
+                                        margin:
+                                            EdgeInsets.only(top: 70, left: 10),
+                                        child: Stack(
+                                          alignment: Alignment.topLeft,
+                                          children: [
+                                            InkWell(
+                                              onTap: () {
+                                                Navigator.pushNamed(context,
+                                                    DetailsScreen.routeName,
+                                                    arguments: DetailsModel(
+                                                      results.title ??
+                                                          'nothing',
+                                                      results.backdropPath ??
+                                                          'assets/images/movie.jpg',
+                                                      results.releaseDate ??
+                                                          'No date',
+                                                      results.id.toString(),
+                                                      results.posterPath ??
+                                                          'assets/images/movie.jpg',
+                                                      results.voteAverage
+                                                          .toString(),
+                                                    ));
+                                                print('poster');
+                                              },
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                child: Image(
+                                                  image: AssetImage(
+                                                      'assets/images/movie.jpg'),
+                                                  width: 130,
+                                                  height: 180,
+                                                  fit: BoxFit.fill,
+                                                ),
+                                              ),
+                                            ),
+                                            InkWell(
+                                              onTap: () {
+                                                WatchListModel watchList =
+                                                    WatchListModel(
+                                                  movieId:
+                                                      results.id.toString(),
+                                                  imageUrl: results
+                                                          .backdropPath ??
+                                                      'assets/images/movie.jpg',
+                                                  date: results.releaseDate ??
+                                                      'No date',
+                                                  title: results.title ??
+                                                      'nothing',
+                                                  description:
+                                                      results.overview ??
+                                                          'nothing',
+                                                  posterPath: results
+                                                          .posterPath ??
+                                                      'assets/images/movie.jpg',
+                                                  voteAverage: results
+                                                      .voteAverage
+                                                      .toString(),
+                                                );
+                                                if (firebaseMovieIdList
+                                                    .contains(results.id
+                                                        .toString())) {
+                                                  deleteWatchListFromFireStore(
+                                                      results.id.toString());
+                                                  print('is exist ');
+                                                } else {
+                                                  addWatchListToFireStore(
+                                                      watchList);
+                                                  print(
+                                                      'is not exist and added');
+                                                }
+
+                                                setState(() {});
+                                              },
+                                              child:
+                                                  firebaseMovieIdList.contains(
+                                                          results.id.toString())
+                                                      ? Image.asset(
+                                                          'assets/images/bookmark2.png',
+                                                        )
+                                                      : Image.asset(
+                                                          'assets/images/bookmark.png',
+                                                        ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                                   ],
                                 ),
                               ),
                             )
                             .toList(),
                         options: CarouselOptions(
-                          height: 250,
+                          height: ScreenSize.height * .29,
                           aspectRatio: 16 / 9,
                           viewportFraction: 1.0,
                           initialPage: 0,
@@ -243,7 +373,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         );
                       }
-                      var IdList = snapshot.data!.results!.map((docs) =>docs.id.toString()).toList();
+                      var IdList = snapshot.data!.results!
+                          .map((docs) => docs.id.toString())
+                          .toList();
+                      var WidgetHeight = ScreenSize.height * .17;
                       return Container(
                         margin: EdgeInsets.symmetric(vertical: 20),
                         color: Color.fromRGBO(40, 42, 40, 1.0),
@@ -263,7 +396,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                             Container(
-                              height: 130,
+                              height: WidgetHeight,
                               child: ListView.separated(
                                   physics: BouncingScrollPhysics(),
                                   scrollDirection: Axis.horizontal,
@@ -278,16 +411,20 @@ class _HomeScreenState extends State<HomeScreen> {
                                         Navigator.pushNamed(
                                             context, DetailsScreen.routeName,
                                             arguments: DetailsModel(
-                                              snapshot
-                                                  .data!.results![index].title!,
                                               snapshot.data!.results![index]
-                                                  .backdropPath!,
+                                                      .title ??
+                                                  'nothing',
                                               snapshot.data!.results![index]
-                                                  .releaseDate!,
+                                                      .backdropPath ??
+                                                  'assets/images/movie.jpg',
+                                              snapshot.data!.results![index]
+                                                      .releaseDate ??
+                                                  'nothing',
                                               snapshot.data!.results![index].id
                                                   .toString(),
                                               snapshot.data!.results![index]
-                                                  .posterPath!,
+                                                      .posterPath ??
+                                                  'assets/images/movie.jpg',
                                               snapshot.data!.results![index]
                                                   .voteAverage
                                                   .toString(),
@@ -297,40 +434,94 @@ class _HomeScreenState extends State<HomeScreen> {
                                         margin: EdgeInsets.only(left: 10),
                                         child: Stack(
                                           children: [
-                                            ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(10.0),
-                                              child: Image(
-                                                image: NetworkImage(
-                                                    "${BASE_IMAGE_URL + BASE_SIZE_IMAGE + snapshot.data!.results![index].posterPath!}"),
-                                                height: 120,
+                                            if (snapshot.data!.results![index]
+                                                    .posterPath !=
+                                                null)
+                                              ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(10.0),
+                                                child: Image(
+                                                  image: NetworkImage(
+                                                      "${BASE_IMAGE_URL + BASE_SIZE_IMAGE + snapshot.data!.results![index].posterPath!}"),
+                                                  height: WidgetHeight * .94,
+                                                  width: 100,
+                                                  fit: BoxFit.fill,
+                                                ),
                                               ),
-                                            ),
+                                            if (snapshot.data!.results![index]
+                                                    .posterPath ==
+                                                null)
+                                              ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(10.0),
+                                                child: Image(
+                                                  image: AssetImage(
+                                                      'assets/images/movie.jpg'),
+                                                  height: WidgetHeight * .94,
+                                                  width: 100,
+                                                  fit: BoxFit.fill,
+                                                ),
+                                              ),
                                             InkWell(
                                               onTap: () {
-                                                WatchListModel watchList=WatchListModel(
-                                                  movieId: snapshot.data!.results![index].id.toString(),
-                                                  imageUrl: snapshot.data!.results![index].backdropPath!,
-                                                  date: snapshot.data!.results![index].releaseDate!,
-                                                  title: snapshot.data!.results![index].title!,
-                                                  description: snapshot.data!.results![index].overview!,
-                                                  posterPath: snapshot.data!.results![index].posterPath!,
-                                                  voteAverage: snapshot.data!.results![index].voteAverage.toString(),
+                                                WatchListModel watchList =
+                                                    WatchListModel(
+                                                  movieId: snapshot
+                                                      .data!.results![index].id
+                                                      .toString(),
+                                                  imageUrl: snapshot
+                                                          .data!
+                                                          .results![index]
+                                                          .backdropPath ??
+                                                      'assets/images/movie.jpg',
+                                                  date: snapshot
+                                                          .data!
+                                                          .results![index]
+                                                          .releaseDate ??
+                                                      'No date',
+                                                  title: snapshot
+                                                          .data!
+                                                          .results![index]
+                                                          .title ??
+                                                      'nothing',
+                                                  description: snapshot
+                                                          .data!
+                                                          .results![index]
+                                                          .overview ??
+                                                      'nothing',
+                                                  posterPath: snapshot
+                                                          .data!
+                                                          .results![index]
+                                                          .posterPath ??
+                                                      'assets/images/movie.jpg',
+                                                  voteAverage: snapshot
+                                                      .data!
+                                                      .results![index]
+                                                      .voteAverage
+                                                      .toString(),
                                                 );
-                                                if(firebaseMovieIdList.contains(IdList[index])){
-                                                  deleteWatchListFromFireStore(IdList[index]);
+                                                if (firebaseMovieIdList
+                                                    .contains(IdList[index])) {
+                                                  deleteWatchListFromFireStore(
+                                                      IdList[index]);
                                                   print('is exist ');
-                                                }else{
-                                                  addWatchListToFireStore(watchList);
-                                                  print('is not exist and added');
+                                                } else {
+                                                  addWatchListToFireStore(
+                                                      watchList);
+                                                  print(
+                                                      'is not exist and added');
                                                 }
 
                                                 setState(() {});
                                               },
-                                              child:
-                                              firebaseMovieIdList.contains(IdList[index])?
-                                              Image.asset('assets/images/bookmark2.png',):
-                                              Image.asset('assets/images/bookmark.png',),
+                                              child: firebaseMovieIdList
+                                                      .contains(IdList[index])
+                                                  ? Image.asset(
+                                                      'assets/images/bookmark2.png',
+                                                    )
+                                                  : Image.asset(
+                                                      'assets/images/bookmark.png',
+                                                    ),
                                             ),
                                           ],
                                         ),
@@ -362,7 +553,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         );
                       }
-                      var IdList = snapshot.data!.results!.map((docs) =>docs.id.toString()).toList();
+                      var IdList = snapshot.data!.results!
+                          .map((docs) => docs.id.toString())
+                          .toList();
+                      var widgetHeight = ScreenSize.height * .28;
                       return Container(
                         margin: EdgeInsets.only(bottom: 20),
                         color: Color.fromRGBO(40, 42, 40, 1.0),
@@ -384,7 +578,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             Container(
                               // border with all
-                              height: ScreenSize.height - 580,
+                              height: widgetHeight,
                               child: ListView.separated(
                                   scrollDirection: Axis.horizontal,
                                   itemCount: snapshot.data!.results!.length,
@@ -398,16 +592,20 @@ class _HomeScreenState extends State<HomeScreen> {
                                         Navigator.pushNamed(
                                             context, DetailsScreen.routeName,
                                             arguments: DetailsModel(
-                                              snapshot
-                                                  .data!.results![index].title!,
                                               snapshot.data!.results![index]
-                                                  .backdropPath!,
+                                                      .title ??
+                                                  'nothing',
                                               snapshot.data!.results![index]
-                                                  .releaseDate!,
+                                                      .backdropPath ??
+                                                  'assets/images/movie.jpg',
+                                              snapshot.data!.results![index]
+                                                      .releaseDate ??
+                                                  'nothing',
                                               snapshot.data!.results![index].id
                                                   .toString(),
                                               snapshot.data!.results![index]
-                                                  .posterPath!,
+                                                      .posterPath ??
+                                                  'assets/images/movie.jpg',
                                               snapshot.data!.results![index]
                                                   .voteAverage
                                                   .toString(),
@@ -432,48 +630,109 @@ class _HomeScreenState extends State<HomeScreen> {
                                           children: [
                                             Stack(
                                               children: [
-                                                ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10.0),
-                                                  child: Image(
-                                                    image: NetworkImage(
-                                                        "${BASE_IMAGE_URL + BASE_SIZE_IMAGE + snapshot.data!.results![index].posterPath!}"),
-                                                    height: 130,
-                                                    width: double.infinity,
-                                                    fit: BoxFit.fill,
+                                                if (snapshot
+                                                        .data!
+                                                        .results![index]
+                                                        .posterPath !=
+                                                    null)
+                                                  ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10.0),
+                                                    child: Image(
+                                                      image: NetworkImage(
+                                                          "${BASE_IMAGE_URL + BASE_SIZE_IMAGE + snapshot.data!.results![index].posterPath!}"),
+                                                      height:
+                                                          widgetHeight * .55,
+                                                      width: double.infinity,
+                                                      fit: BoxFit.fill,
+                                                    ),
                                                   ),
-                                                ),
+                                                if (snapshot
+                                                        .data!
+                                                        .results![index]
+                                                        .posterPath ==
+                                                    null)
+                                                  ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10.0),
+                                                    child: Image(
+                                                      image: AssetImage(
+                                                          'assets/images/movie.jpg'),
+                                                      height:
+                                                          widgetHeight * .55,
+                                                      width: double.infinity,
+                                                      fit: BoxFit.fill,
+                                                    ),
+                                                  ),
                                                 InkWell(
                                                   onTap: () {
-                                                    WatchListModel watchList=WatchListModel(
-                                                        movieId: snapshot.data!.results![index].id.toString(),
-                                                        imageUrl: snapshot.data!.results![index].backdropPath!,
-                                                        date: snapshot.data!.results![index].releaseDate!,
-                                                        title: snapshot.data!.results![index].title!,
-                                                        description: snapshot.data!.results![index].overview!,
-                                                      posterPath: snapshot.data!.results![index].posterPath!,
-                                                      voteAverage: snapshot.data!.results![index].voteAverage.toString(),
+                                                    WatchListModel watchList =
+                                                        WatchListModel(
+                                                      movieId: snapshot.data!
+                                                          .results![index].id
+                                                          .toString(),
+                                                      imageUrl: snapshot
+                                                              .data!
+                                                              .results![index]
+                                                              .backdropPath ??
+                                                          'assets/images/movie.jpg',
+                                                      date: snapshot
+                                                              .data!
+                                                              .results![index]
+                                                              .releaseDate ??
+                                                          'No date',
+                                                      title: snapshot
+                                                              .data!
+                                                              .results![index]
+                                                              .title ??
+                                                          'nothing',
+                                                      description: snapshot
+                                                              .data!
+                                                              .results![index]
+                                                              .overview ??
+                                                          'nothing',
+                                                      posterPath: snapshot
+                                                              .data!
+                                                              .results![index]
+                                                              .posterPath ??
+                                                          'assets/images/movie.jpg',
+                                                      voteAverage: snapshot
+                                                          .data!
+                                                          .results![index]
+                                                          .voteAverage
+                                                          .toString(),
                                                     );
-                                                    if(firebaseMovieIdList.contains(IdList[index])){
-                                                      deleteWatchListFromFireStore(IdList[index]);
+                                                    if (firebaseMovieIdList
+                                                        .contains(
+                                                            IdList[index])) {
+                                                      deleteWatchListFromFireStore(
+                                                          IdList[index]);
                                                       print('is exist ');
-                                                    }else{
-                                                      addWatchListToFireStore(watchList);
-                                                      print('is not exist and added');
+                                                    } else {
+                                                      addWatchListToFireStore(
+                                                          watchList);
+                                                      print(
+                                                          'is not exist and added');
                                                     }
 
                                                     setState(() {});
                                                   },
-                                                  child:
-                                                  firebaseMovieIdList.contains(IdList[index])?
-                                                  Image.asset('assets/images/bookmark2.png',):
-                                                  Image.asset('assets/images/bookmark.png',),
+                                                  child: firebaseMovieIdList
+                                                          .contains(
+                                                              IdList[index])
+                                                      ? Image.asset(
+                                                          'assets/images/bookmark2.png',
+                                                        )
+                                                      : Image.asset(
+                                                          'assets/images/bookmark.png',
+                                                        ),
                                                 ),
                                               ],
                                             ),
                                             SizedBox(
-                                              height: 10,
+                                              height: 6,
                                             ),
                                             Row(
                                               children: [
@@ -486,7 +745,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       255, 187, 59, 1.0),
                                                 ),
                                                 SizedBox(
-                                                  width: 10,
+                                                  width: 8,
                                                 ),
                                                 Text(
                                                   '${snapshot.data?.results?[index].voteAverage ?? 'rate'}',

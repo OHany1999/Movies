@@ -133,9 +133,9 @@ class _SearchScreenState extends State<SearchScreen> {
                                     context,
                                     DetailsScreen.routeName,
                                     arguments:DetailsModel(
-                                      snapshot.data!.results![index].title!,
+                                      snapshot.data!.results![index].title??'nothing',
                                       snapshot.data!.results![index].backdropPath??'assets/images/movie.jpg',
-                                      snapshot.data!.results![index].releaseDate!,
+                                      snapshot.data!.results![index].releaseDate??'No date',
                                       snapshot.data!.results![index].id.toString(),
                                       snapshot.data!.results![index].posterPath??'assets/images/movie.jpg',
                                       snapshot.data!.results![index].voteAverage.toString(),
@@ -164,10 +164,10 @@ class _SearchScreenState extends State<SearchScreen> {
                                               WatchListModel watchList=WatchListModel(
                                                 movieId: snapshot.data!.results![index].id.toString(),
                                                 imageUrl: snapshot.data!.results![index].backdropPath!,
-                                                date: snapshot.data!.results![index].releaseDate!,
-                                                title: snapshot.data!.results![index].title!,
-                                                description: snapshot.data!.results![index].overview!,
-                                                posterPath: snapshot.data!.results![index].posterPath!,
+                                                date: snapshot.data!.results![index].releaseDate??'No date',
+                                                title: snapshot.data!.results![index].title??'nothing',
+                                                description: snapshot.data!.results![index].overview??'nothing',
+                                                posterPath: snapshot.data!.results![index].posterPath??'assets/images/movie.jpg',
                                                 voteAverage: snapshot.data!.results![index].voteAverage.toString(),
                                               );
                                               if(firebaseMovieIdList.contains(IdList[index])){
@@ -206,8 +206,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                               WatchListModel watchList=WatchListModel(
                                                 movieId: snapshot.data!.results![index].id.toString(),
                                                 imageUrl: snapshot.data!.results![index].backdropPath??'assets/images/movie.jpg',
-                                                date: snapshot.data!.results![index].releaseDate!,
-                                                title: snapshot.data!.results![index].title!,
+                                                date: snapshot.data!.results![index].releaseDate??'No date',
+                                                title: snapshot.data!.results![index].title??'nothing',
                                                 description: snapshot.data!.results![index].overview!,
                                                 posterPath: snapshot.data!.results![index].posterPath??'assets/images/movie.jpg',
                                                 voteAverage: snapshot.data!.results![index].voteAverage.toString(),

@@ -22,10 +22,11 @@ class CategoryMoviesScreen extends StatefulWidget {
 class _CategoryMoviesScreenState extends State<CategoryMoviesScreen> {
   var get_gata_from_fireStore =getDataFromFireStore();
 
+
   @override
   Widget build(BuildContext context) {
     var args = ModalRoute.of(context)?.settings.arguments as IdModel;
-    var  getDiscover= ApiManager.getDiscover(args.catId);
+    var  getDiscover =ApiManager.getDiscover(args.catId);
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -98,11 +99,11 @@ class _CategoryMoviesScreenState extends State<CategoryMoviesScreen> {
                                     context,
                                     DetailsScreen.routeName,
                                     arguments:DetailsModel(
-                                      snapshot.data!.results![index].title!,
-                                      snapshot.data!.results![index].backdropPath!,
-                                      snapshot.data!.results![index].releaseDate!,
+                                      snapshot.data!.results![index].title??'nothing',
+                                      snapshot.data!.results![index].backdropPath??'assets/images/movie.jpg',
+                                      snapshot.data!.results![index].releaseDate??'No date',
                                       snapshot.data!.results![index].id.toString(),
-                                      snapshot.data!.results![index].posterPath!,
+                                      snapshot.data!.results![index].posterPath??'assets/images/movie.jpg',
                                       snapshot.data!.results![index].voteAverage.toString(),
                                     )
                                 );
@@ -131,10 +132,10 @@ class _CategoryMoviesScreenState extends State<CategoryMoviesScreen> {
                                               WatchListModel watchList=WatchListModel(
                                                 movieId: snapshot.data!.results![index].id.toString(),
                                                 imageUrl: snapshot.data!.results![index].backdropPath!,
-                                                date: snapshot.data!.results![index].releaseDate!,
-                                                title: snapshot.data!.results![index].title!,
-                                                description: snapshot.data!.results![index].overview!,
-                                                posterPath: snapshot.data!.results![index].posterPath!,
+                                                date: snapshot.data!.results![index].releaseDate??'assets/images/movie.jpg',
+                                                title: snapshot.data!.results![index].title??'nothing',
+                                                description: snapshot.data!.results![index].overview??'nothing',
+                                                posterPath: snapshot.data!.results![index].posterPath??'assets/images/movie.jpg',
                                                 voteAverage: snapshot.data!.results![index].voteAverage.toString(),
                                               );
                                               if(firebaseMovieIdList.contains(IdList[index])){
@@ -145,7 +146,6 @@ class _CategoryMoviesScreenState extends State<CategoryMoviesScreen> {
                                                 print('is not exist and added');
                                               }
                                               setState(() {
-
                                               });
                                             },
                                             child:
@@ -179,11 +179,11 @@ class _CategoryMoviesScreenState extends State<CategoryMoviesScreen> {
                                             onTap: (){
                                               WatchListModel watchList=WatchListModel(
                                                 movieId: snapshot.data!.results![index].id.toString(),
-                                                imageUrl: snapshot.data!.results![index].backdropPath!,
-                                                date: snapshot.data!.results![index].releaseDate!,
-                                                title: snapshot.data!.results![index].title!,
-                                                description: snapshot.data!.results![index].overview!,
-                                                posterPath: snapshot.data!.results![index].posterPath!,
+                                                imageUrl: snapshot.data!.results![index].backdropPath??'assets/images/movie.jpg',
+                                                date: snapshot.data!.results![index].releaseDate??'nothing',
+                                                title: snapshot.data!.results![index].title??'nothing',
+                                                description: snapshot.data!.results![index].overview??'nothing',
+                                                posterPath: snapshot.data!.results![index].posterPath??'assets/images/movie.jpg',
                                                 voteAverage: snapshot.data!.results![index].voteAverage.toString(),
                                               );
                                               if(firebaseMovieIdList.contains(IdList[index])){
@@ -193,7 +193,8 @@ class _CategoryMoviesScreenState extends State<CategoryMoviesScreen> {
                                                 addWatchListToFireStore(watchList);
                                                 print('is not exist and added');
                                               }
-                                              setState(() {});
+                                              setState(() {
+                                              });
                                             },
                                             child:
                                             firebaseMovieIdList.contains(IdList[index])?

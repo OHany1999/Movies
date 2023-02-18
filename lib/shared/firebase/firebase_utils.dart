@@ -28,3 +28,4 @@ Stream<QuerySnapshot<WatchListModel>> getDataFromFireStore(){
   return data;
 
 }
+

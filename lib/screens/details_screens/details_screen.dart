@@ -162,8 +162,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                     WatchListModel watchList=WatchListModel(
                                       movieId: snapshot.data!.id.toString(),
                                       imageUrl: snapshot.data!.backdropPath??'assets/images/movie.jpg',
-                                      date: snapshot.data!.releaseDate!,
-                                      title: snapshot.data!.title!,
+                                      date: snapshot.data!.releaseDate??'No date',
+                                      title: snapshot.data!.title??'nothing',
                                       description: snapshot.data!.overview!,
                                       posterPath: snapshot.data!.posterPath??'assets/images/movie.jpg',
                                       voteAverage: snapshot.data!.voteAverage.toString(),
@@ -315,11 +315,11 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                         Navigator.pushNamed(
                                           context, DetailsScreen.routeName,
                                           arguments: DetailsModel(
-                                            snapshot.data!.results![index].title!,
-                                            snapshot.data!.results![index].backdropPath!,
-                                            snapshot.data!.results![index].releaseDate!,
+                                            snapshot.data!.results![index].title??'nothing',
+                                            snapshot.data!.results![index].backdropPath??'assets/images/movie.jpg',
+                                            snapshot.data!.results![index].releaseDate??'No date',
                                             snapshot.data!.results![index].id.toString(),
-                                            snapshot.data!.results![index].posterPath!,
+                                            snapshot.data!.results![index].posterPath??'assets/images/movie.jpg',
                                             snapshot.data!.results![index].voteAverage.toString(),
                                           )
                                           ,
@@ -340,18 +340,14 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                         ),
                                         child: Column(
                                           children: [
+                                            if(snapshot.data!.results![index].posterPath != null)
                                             Stack(
                                               children: [
                                                 ClipRRect(
                                                   borderRadius:
                                                   BorderRadius.circular(10.0),
                                                   child: Image(
-                                                    image: NetworkImage(
-                                                        "${BASE_IMAGE_URL +
-                                                            BASE_SIZE_IMAGE +
-                                                            snapshot.data!
-                                                                .results![index]
-                                                                .posterPath!}"),
+                                                    image: NetworkImage("${BASE_IMAGE_URL + BASE_SIZE_IMAGE + snapshot.data!.results![index].posterPath!}"),
                                                     width: double.infinity,
                                                     height: 130,
                                                     fit: BoxFit.fill,
@@ -361,10 +357,10 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                                   onTap: () {
                                                     WatchListModel watchList=WatchListModel(
                                                       movieId: snapshot.data!.results![index].id.toString(),
-                                                      imageUrl: snapshot.data!.results![index].backdropPath!,
-                                                      date: snapshot.data!.results![index].releaseDate!,
-                                                      title: snapshot.data!.results![index].title!,
-                                                      description: snapshot.data!.results![index].overview!,
+                                                      imageUrl: snapshot.data!.results![index].backdropPath??'assets/images/movie.jpg',
+                                                      date: snapshot.data!.results![index].releaseDate??'No date',
+                                                      title: snapshot.data!.results![index].title??'nothing',
+                                                      description: snapshot.data!.results![index].overview??'nothing',
                                                       posterPath: snapshot.data!.results![index].posterPath!,
                                                       voteAverage: snapshot.data!.results![index].voteAverage.toString(),
                                                     );
@@ -385,6 +381,47 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                                 ),
                                               ],
                                             ),
+                                            if(snapshot.data!.results![index].posterPath == null)
+                                              Stack(
+                                                children: [
+                                                  ClipRRect(
+                                                    borderRadius:
+                                                    BorderRadius.circular(10.0),
+                                                    child: Image.asset(
+                                                      'assets/images/movie.jpg',
+                                                      width: double.infinity,
+                                                      height: 130,
+                                                      fit: BoxFit.fill,
+                                                    ),
+                                                  ),
+                                                  InkWell(
+                                                    onTap: () {
+                                                      WatchListModel watchList=WatchListModel(
+                                                        movieId: snapshot.data!.results![index].id.toString(),
+                                                        imageUrl: snapshot.data!.results![index].backdropPath??'assets/images/movie.jpg',
+                                                        date: snapshot.data!.results![index].releaseDate??'No date',
+                                                        title: snapshot.data!.results![index].title??'nothing',
+                                                        description: snapshot.data!.results![index].overview??'nothing',
+                                                        posterPath: snapshot.data!.results![index].posterPath??'assets/images/movie.jpg',
+                                                        voteAverage: snapshot.data!.results![index].voteAverage.toString(),
+                                                      );
+                                                      if(firebaseMovieIdList.contains(IdList[index])){
+                                                        deleteWatchListFromFireStore(IdList[index]);
+                                                        print('is exist ');
+                                                      }else{
+                                                        addWatchListToFireStore(watchList);
+                                                        print('is not exist and added');
+                                                      }
+
+                                                      setState(() {});
+                                                    },
+                                                    child:
+                                                    firebaseMovieIdList.contains(IdList[index])?
+                                                    Image.asset('assets/images/bookmark2.png',):
+                                                    Image.asset('assets/images/bookmark.png',),
+                                                  ),
+                                                ],
+                                              ),
                                             SizedBox(height: 5,),
                                             Row(
                                               children: [
