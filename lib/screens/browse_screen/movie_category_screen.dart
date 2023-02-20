@@ -1,37 +1,60 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:movie/models/browse/Discover.dart';
+import 'package:movie/models/browse/browse_screen_model_for_navigator/id_model.dart';
+import 'package:movie/models/main_details_Screen_model.dart';
 import 'package:movie/models/search/Search.dart';
 import 'package:movie/models/search/search_details_model.dart';
+import 'package:movie/screens/details_screens/details_screen.dart';
 import 'package:movie/shared/api/api_manager.dart';
 import 'package:movie/shared/constants/constants.dart';
 
 import '../../models/friebase_model/watch_list_model.dart';
-import '../../models/main_details_Screen_model.dart';
 import '../../shared/firebase/firebase_utils.dart';
-import '../details_screens/details_screen.dart';
 
-class SearchScreen extends StatefulWidget {
-  static const String routeName = 'search';
+class CategoryMoviesScreen extends StatefulWidget {
+  static const String routeName = 'movies_category';
 
   @override
-  State<SearchScreen> createState() => _SearchScreenState();
+  State<CategoryMoviesScreen> createState() => _CategoryMoviesScreenState();
 }
 
-class _SearchScreenState extends State<SearchScreen> {
-  late String data = '';
+class _CategoryMoviesScreenState extends State<CategoryMoviesScreen> {
   var get_gata_from_fireStore =getDataFromFireStore();
-  var getSearch;
-
+  var isBuild = false;
+  var getDiscover;
+  void BuildApi(String catID){
+    if(isBuild==false){
+      getDiscover =ApiManager.getDiscover(catID);
+      isBuild = true;
+      setState(() {
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    var args = ModalRoute.of(context)?.settings.arguments as IdModel;
+    BuildApi(args.catId);
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0.0,
+          centerTitle: true,
+          title: Text(
+            '${args.catName} Movies',
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.bold),
+          ),
+        ),
         backgroundColor: Color.fromRGBO(18, 19, 18, 1.0),
         body: SingleChildScrollView(
           child: StreamBuilder<QuerySnapshot<WatchListModel>>(
             stream: get_gata_from_fireStore,
-            builder:(context,mainSnapshot){
+            builder: (context,mainSnapshot){
               if (mainSnapshot.connectionState == ConnectionState.waiting) {
                 return Center(child: Container());
               }
@@ -52,50 +75,13 @@ class _SearchScreenState extends State<SearchScreen> {
               var firebaseMovieIdList = firebaseList.map((docs) => docs.movieId).toList();
               return Column(
                 children: [
-                  Container(
-                    margin: EdgeInsets.only(left: 20, right: 20, top: 10),
-                    child: TextField(
-                      style: TextStyle(color: Colors.white),
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Color.fromRGBO(81, 79, 79, 1.0),
-                        label: Text(
-                          'search',
-                          style:
-                          TextStyle(color: Color.fromRGBO(181, 180, 180, 1.0)),
-                        ),
-                        prefixIcon: Icon(
-                          Icons.search,
-                          color: Colors.white,
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.white,
-                          ),
-                          borderRadius: BorderRadius.circular(50),
-                        ),
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.white,
-                          ),
-                          borderRadius: BorderRadius.circular(50),
-                        ),
-                      ),
-                      onChanged: (text) {
-                        data = text;
-                        setState(() {
-                          getSearch =ApiManager.getSearch(data);
-                        });
-                      },
-                    ),
-                  ),
-                  FutureBuilder<Search>(
-                      future: getSearch,
+                  FutureBuilder<Discover?>(
+                      future: getDiscover,
                       builder: (context, snapshot) {
                         if (snapshot.connectionState == ConnectionState.waiting) {
                           return Container(
                             margin: EdgeInsets.only(top: 300),
-                            child: CircularProgressIndicator(),
+                            child: Center(child: CircularProgressIndicator()),
                           );
                         }
                         if (snapshot.hasError) {
@@ -111,24 +97,13 @@ class _SearchScreenState extends State<SearchScreen> {
                             ),
                           );
                         }
-                        if (data.trim() == '' ) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              Container(
-                                  margin: EdgeInsets.only(top: 90),
-                                  child:
-                                  Image.asset('assets/images/NoMovies.png')),
-                            ],
-                          );
-                        }
                         var IdList = snapshot.data!.results!.map((docs) =>docs.id.toString()).toList();
                         return ListView.separated(
                           shrinkWrap: true,
                           physics: BouncingScrollPhysics(),
                           itemBuilder: (context, index) {
                             return InkWell(
-                              onTap: (){
+                              onTap: () {
                                 Navigator.pushNamed(
                                     context,
                                     DetailsScreen.routeName,
@@ -146,7 +121,9 @@ class _SearchScreenState extends State<SearchScreen> {
                                 margin: EdgeInsets.only(left: 20),
                                 child: Row(
                                   children: [
-                                    if(snapshot.data?.results?[index].backdropPath != null)
+                                    if (snapshot
+                                        .data?.results?[index].backdropPath !=
+                                        null)
                                       Stack(
                                         alignment: Alignment.topLeft,
                                         children: [
@@ -164,7 +141,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                               WatchListModel watchList=WatchListModel(
                                                 movieId: snapshot.data!.results![index].id.toString(),
                                                 imageUrl: snapshot.data!.results![index].backdropPath!,
-                                                date: snapshot.data!.results![index].releaseDate??'No date',
+                                                date: snapshot.data!.results![index].releaseDate??'assets/images/movie.jpg',
                                                 title: snapshot.data!.results![index].title??'nothing',
                                                 description: snapshot.data!.results![index].overview??'nothing',
                                                 posterPath: snapshot.data!.results![index].posterPath??'assets/images/movie.jpg',
@@ -177,27 +154,33 @@ class _SearchScreenState extends State<SearchScreen> {
                                                 addWatchListToFireStore(watchList);
                                                 print('is not exist and added');
                                               }
-                                              setState(() {});
+                                              setState(() {
+                                              });
                                             },
                                             child:
                                             firebaseMovieIdList.contains(IdList[index])?
                                             Container(
                                               margin: EdgeInsets.only(top: 25),
-                                                child: Image.asset('assets/images/bookmark2.png',),):
+                                              child: Image.asset('assets/images/bookmark2.png',),):
                                             Container(
                                               margin: EdgeInsets.only(top: 25),
-                                                child: Image.asset('assets/images/bookmark.png',),
+                                              child: Image.asset('assets/images/bookmark.png',),
                                             ),
                                           ),
                                         ],
                                       ),
-                                    if(snapshot.data?.results?[index].backdropPath == null)
+                                    if (snapshot
+                                        .data?.results?[index].backdropPath ==
+                                        null)
                                       Stack(
                                         alignment: Alignment.topLeft,
                                         children: [
                                           ClipRRect(
                                             borderRadius: BorderRadius.circular(20),
-                                            child: Image(image: AssetImage('assets/images/movie.jpg'),width: 140,
+                                            child: Image(
+                                              image: AssetImage(
+                                                  'assets/images/movie.jpg'),
+                                              width: 140,
                                               height: 130,
                                             ),
                                           ),
@@ -206,9 +189,9 @@ class _SearchScreenState extends State<SearchScreen> {
                                               WatchListModel watchList=WatchListModel(
                                                 movieId: snapshot.data!.results![index].id.toString(),
                                                 imageUrl: snapshot.data!.results![index].backdropPath??'assets/images/movie.jpg',
-                                                date: snapshot.data!.results![index].releaseDate??'No date',
+                                                date: snapshot.data!.results![index].releaseDate??'nothing',
                                                 title: snapshot.data!.results![index].title??'nothing',
-                                                description: snapshot.data!.results![index].overview!,
+                                                description: snapshot.data!.results![index].overview??'nothing',
                                                 posterPath: snapshot.data!.results![index].posterPath??'assets/images/movie.jpg',
                                                 voteAverage: snapshot.data!.results![index].voteAverage.toString(),
                                               );
@@ -219,17 +202,18 @@ class _SearchScreenState extends State<SearchScreen> {
                                                 addWatchListToFireStore(watchList);
                                                 print('is not exist and added');
                                               }
-                                              setState(() {});
+                                              setState(() {
+                                              });
                                             },
-                                              child:
-                                              firebaseMovieIdList.contains(IdList[index])?
-                                              Container(
-                                                margin: EdgeInsets.only(top: 18),
-                                                child: Image.asset('assets/images/bookmark2.png',),):
-                                              Container(
-                                                margin: EdgeInsets.only(top: 18),
-                                                child: Image.asset('assets/images/bookmark.png',),
-                                              ),
+                                            child:
+                                            firebaseMovieIdList.contains(IdList[index])?
+                                            Container(
+                                              margin: EdgeInsets.only(top: 18),
+                                              child: Image.asset('assets/images/bookmark2.png',),):
+                                            Container(
+                                              margin: EdgeInsets.only(top: 18),
+                                              child: Image.asset('assets/images/bookmark.png',),
+                                            ),
                                           ),
                                         ],
                                       ),
@@ -237,18 +221,20 @@ class _SearchScreenState extends State<SearchScreen> {
                                       child: Container(
                                         margin: EdgeInsets.only(left: 20),
                                         child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              '${snapshot.data!.results?[index].title??'No Name'}',
+                                              '${snapshot.data!.results?[index].title ?? 'No Name'}',
                                               style: TextStyle(
-                                                  color: Colors.white, fontSize: 15),
+                                                  color: Colors.white,
+                                                  fontSize: 15),
                                             ),
                                             SizedBox(
                                               height: 6,
                                             ),
                                             Text(
-                                              '${snapshot.data!.results?[index].releaseDate??'stil'}',
+                                              '${snapshot.data!.results?[index].releaseDate ?? 'stil'}',
                                               style: TextStyle(
                                                   color: Color.fromRGBO(
                                                       181, 180, 180, 1.0),
@@ -260,7 +246,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                             Text(
                                               overflow: TextOverflow.ellipsis,
                                               maxLines: 1,
-                                              '${snapshot.data!.results?[index].overview??'No Name'}',
+                                              '${snapshot.data!.results?[index].overview ?? 'No Name'}',
                                               style: TextStyle(
                                                   color: Color.fromRGBO(
                                                       181, 180, 180, 1.0),
@@ -285,7 +271,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       }),
                 ],
               );
-            } ,
+            },
           ),
         ),
       ),
