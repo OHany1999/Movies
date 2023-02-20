@@ -21,12 +21,21 @@ class CategoryMoviesScreen extends StatefulWidget {
 
 class _CategoryMoviesScreenState extends State<CategoryMoviesScreen> {
   var get_gata_from_fireStore =getDataFromFireStore();
-
+  var isBuild = false;
+  var getDiscover;
+  void BuildApi(String catID){
+    if(isBuild==false){
+      getDiscover =ApiManager.getDiscover(catID);
+      isBuild = true;
+      setState(() {
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     var args = ModalRoute.of(context)?.settings.arguments as IdModel;
-    var  getDiscover =ApiManager.getDiscover(args.catId);
+    BuildApi(args.catId);
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -66,7 +75,7 @@ class _CategoryMoviesScreenState extends State<CategoryMoviesScreen> {
               var firebaseMovieIdList = firebaseList.map((docs) => docs.movieId).toList();
               return Column(
                 children: [
-                  FutureBuilder<Discover>(
+                  FutureBuilder<Discover?>(
                       future: getDiscover,
                       builder: (context, snapshot) {
                         if (snapshot.connectionState == ConnectionState.waiting) {

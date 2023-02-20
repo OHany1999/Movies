@@ -21,10 +21,23 @@ class DetailsScreen extends StatefulWidget {
 }
 
 class _DetailsScreenState extends State<DetailsScreen> {
+  var get_gata_from_fireStore =getDataFromFireStore();
+  var isBuild = false;
+  var get_movie_id;
+  var get_more_like_this;
+  void BuildApi(String movieId){
+    if(isBuild==false){
+      get_movie_id = ApiManager.getMovieDetails(movieId);
+      get_more_like_this = ApiManager.getMoreLikeThis(movieId);
+      isBuild = true;
+      setState(() {
+      });
+    }
+  }
   @override
   Widget build(BuildContext context) {
     var arg = ModalRoute.of(context)?.settings.arguments as DetailsModel;
-    var get_gata_from_fireStore =getDataFromFireStore();
+    BuildApi(arg.movieId);
     return Scaffold(
       backgroundColor: Color.fromRGBO(18, 19, 18, 1.0),
       appBar: AppBar(
@@ -114,7 +127,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                   height: 10,
                 ),
                 FutureBuilder<MovieDetails>(
-                    future: ApiManager.getMovieDetails(arg.movieId),
+                    future: get_movie_id,
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return Center(child: CircularProgressIndicator());
@@ -262,7 +275,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                     }),
                 SizedBox(height: 10.0,),
                 FutureBuilder<MoreLikeThis>(
-                    future: ApiManager.getMoreLikeThis(arg.movieId),
+                    future: get_more_like_this,
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return Center(child: Container());
