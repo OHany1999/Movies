@@ -1,3 +1,4 @@
+import 'package:bloc/bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:movie/models/home/home_screen_models_for_navigate/new_releases_model.dart';
@@ -9,9 +10,11 @@ import 'package:movie/screens/home_screen/home_screen.dart';
 
 import 'firebase_options.dart';
 import 'home_layout/home_layout.dart';
+import 'my observer.dart';
 
 
 void main() async{
+  Bloc.observer = MyBlocObserver();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,

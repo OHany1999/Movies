@@ -15,61 +15,6 @@ import '../constants/constants.dart';
 
 class ApiManager{
 
-  static Future<Popular> getPopular()async{
-    Uri uri= Uri.https(BASE, '/3/movie/popular',{
-      'api_key':APIKEY,
-      'language': 'en-US',
-      'page':'1'
-    });
-    Response sources = await http.get(uri);
-    try{
-      var json = jsonDecode(sources.body);
-      Popular popular = Popular.fromJson(json);
-      return popular;
-
-    }catch(error){
-      print("error is: ${error}");
-      throw error;
-    }
-
-  }
-
-  static Future<NewReleases> getNewReleases()async{
-    Uri uri= Uri.https(BASE, '/3/movie/now_playing',{
-      'api_key':APIKEY,
-
-    });
-    Response sources = await http.get(uri);
-    try{
-      var json = jsonDecode(sources.body);
-      NewReleases newReleases = NewReleases.fromJson(json);
-      return newReleases;
-
-
-    }catch(error){
-      print("error is: ${error}");
-      throw error;
-    }
-
-  }
-
-  static Future<Recommended> getRecommended()async{
-    Uri uri= Uri.https(BASE, '/3/movie/top_rated',{
-      'api_key':APIKEY,
-    });
-    Response sources = await http.get(uri);
-    try{
-      var json = jsonDecode(sources.body);
-      Recommended recommended = Recommended.fromJson(json);
-      return recommended;
-
-
-    }catch(error){
-      print("error is: ${error}");
-      throw error;
-    }
-
-  }
 
 
   static Future<MovieDetails> getMovieDetails(String movieId)async{
@@ -94,17 +39,7 @@ class ApiManager{
 
   }
 
-  static Future<Search> getSearch(String Query)async{
-    Uri uri = Uri.https(BASE,'/3/search/movie',{
-      'api_key':APIKEY,
-      'query': Query,
-    });
-    Response sources = await http.get(uri);
-    var json = jsonDecode(sources.body);
-    Search search = Search.fromJson(json);
-    return search;
 
-  }
 
 
   static Future<GenresSection> getGenresSection()async{
