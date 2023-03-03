@@ -1,25 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie/models/browse/Discover.dart';
 import 'package:movie/models/browse/browse_screen_model_for_navigator/id_model.dart';
 import 'package:movie/models/main_details_Screen_model.dart';
 import 'package:movie/models/search/Search.dart';
 import 'package:movie/models/search/search_details_model.dart';
 import 'package:movie/screens/details_screens/details_screen.dart';
-import 'package:movie/shared/api/api_manager.dart';
 import 'package:movie/shared/constants/constants.dart';
-
 import '../../models/friebase_model/watch_list_model.dart';
 import '../../shared/firebase/firebase_utils.dart';
 
-class WatchListScreen extends StatefulWidget {
+class WatchListScreen extends StatelessWidget {
   static const String routeName = 'watchlist';
 
-  @override
-  State<WatchListScreen> createState() => _WatchListScreenState();
-}
-
-class _WatchListScreenState extends State<WatchListScreen> {
   var get_gata_from_fireStore =getDataFromFireStore();
   @override
   Widget build(BuildContext context) {
@@ -102,7 +96,6 @@ class _WatchListScreenState extends State<WatchListScreen> {
                                       deleteWatchListFromFireStore(firebaseMovieIdList[index]);
                                       print('is exist ');
                                     }
-                                    setState(() {});
                                   },
                                   child:
                                   firebaseMovieIdList.contains(firebaseMovieIdList[index])?
@@ -135,7 +128,6 @@ class _WatchListScreenState extends State<WatchListScreen> {
                                       deleteWatchListFromFireStore(firebaseMovieIdList[index]);
                                       print('is exist ');
                                     }
-                                    setState(() {});
                                   },
                                   child:
                                   firebaseMovieIdList.contains(firebaseMovieIdList[index])?
