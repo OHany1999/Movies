@@ -5,7 +5,6 @@ import 'package:movie/models/search/Search.dart';
 import 'package:movie/models/search/search_details_model.dart';
 import 'package:movie/screens/search_screen/search_screen_state.dart';
 import 'package:movie/screens/search_screen/search_screen_vm.dart';
-import 'package:movie/shared/api/api_manager.dart';
 import 'package:movie/shared/constants/constants.dart';
 
 import '../../models/friebase_model/watch_list_model.dart';

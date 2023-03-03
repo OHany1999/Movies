@@ -11,7 +11,6 @@ import 'package:movie/shared/constants/constants.dart';
 import 'package:movie/shared/firebase/firebase_utils.dart';
 import '../../models/home/Popular.dart';
 import '../../models/main_details_Screen_model.dart';
-import '../../shared/api/api_manager.dart';
 import '../details_screens/details_screen.dart';
 
 class HomeScreen extends StatelessWidget {

@@ -85,13 +85,6 @@ class HomeCubit extends Cubit<HomeStates>{
     }
   }
 
-// Future<WatchListModel?> getDataFromFireStoreFor()async{
-//   var myData =  await getTaskCollection().get();
-//   watchListModel = myData.docs.map((e) => e.data()).toList();
-//   if(newReleases != null && popular!=null && recommended !=null && watchListModel != null){
-//     emit(SuccessGetFromStoreToHomeScreenState());
-//   }
-// }
 
 
 // عشان تعمل function تخليها تتاكد منهم كلهم لازم تدلها وقت لانها هتشتغل اسرع منهم
